@@ -1,0 +1,28 @@
+unit uConCategorias;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, uTelaHeranca, Data.DB, ZAbstractRODataset, ZAbstractDataset, ZDataset, Vcl.DBCtrls,
+  Vcl.Grids, Vcl.DBGrids, Vcl.StdCtrls, Vcl.Buttons, Vcl.Mask, Vcl.ExtCtrls, Vcl.ComCtrls;
+
+type
+  TfrmConCategorias = class(TfrmTelaHeranca)
+    btnSelecionar: TBitBtn;
+    QryListagemcategoriaId: TIntegerField;
+    QryListagemdescricao: TWideStringField;
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  frmConCategorias: TfrmConCategorias;
+
+implementation
+
+{$R *.dfm}
+
+end.

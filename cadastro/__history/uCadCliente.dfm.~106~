@@ -1,0 +1,315 @@
+inherited frmCadCliente: TfrmCadCliente
+  Caption = 'Cadastro de cliente'
+  ClientHeight = 407
+  ClientWidth = 1003
+  ExplicitWidth = 1009
+  ExplicitHeight = 436
+  PixelsPerInch = 96
+  TextHeight = 13
+  inherited pgcPrincipal: TPageControl
+    Width = 1003
+    Height = 360
+    ActivePage = tabManutencao
+    ExplicitWidth = 1003
+    ExplicitHeight = 360
+    inherited tabListagem: TTabSheet
+      ExplicitLeft = 4
+      ExplicitTop = 24
+      ExplicitWidth = 995
+      ExplicitHeight = 332
+      inherited pnlListagemTopo: TPanel
+        Width = 995
+        ExplicitWidth = 995
+      end
+      inherited grdListagem: TDBGrid
+        Width = 995
+        Height = 266
+        Columns = <
+          item
+            Expanded = False
+            FieldName = 'clienteId'
+            Width = 66
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'nome'
+            Width = 153
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'cidade'
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'cep'
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'telefone'
+            Width = 96
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'datanascimento'
+            Width = 105
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'estado'
+            Width = 72
+            Visible = True
+          end>
+      end
+    end
+    inherited tabManutencao: TTabSheet
+      ExplicitLeft = 4
+      ExplicitTop = 24
+      ExplicitWidth = 995
+      ExplicitHeight = 332
+      object Label1: TLabel
+        Left = 415
+        Top = 82
+        Width = 19
+        Height = 13
+        Caption = 'CEP'
+      end
+      object ldlTelefone: TLabel
+        Left = 415
+        Top = 160
+        Width = 42
+        Height = 13
+        Caption = 'Telefone'
+      end
+      object Label2: TLabel
+        Left = 3
+        Top = 243
+        Width = 96
+        Height = 13
+        Caption = 'Data de Nascimento'
+      end
+      object lblEstado: TLabel
+        Left = 503
+        Top = 82
+        Width = 33
+        Height = 13
+        Caption = 'Estado'
+      end
+      object edtNome: TLabeledEdit
+        Tag = 2
+        Left = 3
+        Top = 96
+        Width = 358
+        Height = 21
+        Hint = 'Nome'
+        EditLabel.Width = 33
+        EditLabel.Height = 13
+        EditLabel.Caption = 'Nome*'
+        MaxLength = 60
+        TabOrder = 1
+      end
+      object edtClienteId: TLabeledEdit
+        Tag = 1
+        Left = 3
+        Top = 40
+        Width = 46
+        Height = 21
+        EditLabel.Width = 33
+        EditLabel.Height = 13
+        EditLabel.Caption = 'C'#243'digo'
+        MaxLength = 10
+        NumbersOnly = True
+        TabOrder = 0
+      end
+      object edtCEP: TMaskEdit
+        Left = 415
+        Top = 96
+        Width = 66
+        Height = 21
+        EditMask = '99999-999;1;_'
+        MaxLength = 9
+        TabOrder = 2
+        Text = '     -   '
+        OnExit = edtCEPExit
+      end
+      object edtEndereco: TLabeledEdit
+        Left = 3
+        Top = 175
+        Width = 358
+        Height = 21
+        EditLabel.Width = 45
+        EditLabel.Height = 13
+        EditLabel.Caption = 'Endere'#231'o'
+        MaxLength = 60
+        TabOrder = 6
+      end
+      object edtBairro: TLabeledEdit
+        Left = 415
+        Top = 136
+        Width = 182
+        Height = 21
+        EditLabel.Width = 28
+        EditLabel.Height = 13
+        EditLabel.Caption = 'Bairro'
+        MaxLength = 40
+        TabOrder = 5
+      end
+      object edtCidade: TLabeledEdit
+        Left = 3
+        Top = 136
+        Width = 358
+        Height = 21
+        EditLabel.Width = 33
+        EditLabel.Height = 13
+        EditLabel.Caption = 'Cidade'
+        MaxLength = 50
+        TabOrder = 4
+      end
+      object edtEmail: TLabeledEdit
+        Left = 3
+        Top = 216
+        Width = 358
+        Height = 21
+        CharCase = ecLowerCase
+        EditLabel.Width = 28
+        EditLabel.Height = 13
+        EditLabel.Caption = 'E-mail'
+        MaxLength = 100
+        TabOrder = 8
+        OnExit = edtEmailExit
+      end
+      object edtDataNascimento: TDateEdit
+        Left = 3
+        Top = 256
+        Width = 121
+        Height = 21
+        ClickKey = 114
+        Ctl3D = True
+        DialogTitle = 'Selecione a data'
+        NumGlyphs = 2
+        ParentCtl3D = False
+        CalendarStyle = csDialog
+        TabOrder = 9
+      end
+      object lkpEstado: TDBLookupComboBox
+        Tag = 2
+        Left = 503
+        Top = 96
+        Width = 94
+        Height = 21
+        Hint = 'Estado'
+        DropDownRows = 26
+        KeyField = 'id'
+        ListField = 'estado'
+        ListSource = dtsEstados
+        TabOrder = 3
+      end
+      object edtTelefone: TEdit
+        Left = 415
+        Top = 175
+        Width = 121
+        Height = 21
+        TabOrder = 7
+        OnKeyPress = edtTerceiroKeyPress
+      end
+    end
+  end
+  inherited pnlRodape: TPanel
+    Top = 360
+    Width = 1003
+    ExplicitTop = 360
+    ExplicitWidth = 1003
+    DesignSize = (
+      1003
+      47)
+    inherited btnFechar: TBitBtn
+      Left = 913
+      ExplicitLeft = 913
+    end
+    inherited btnNavigator: TDBNavigator
+      Left = 465
+      Hints.Strings = ()
+      ExplicitLeft = 465
+    end
+  end
+  inherited QryListagem: TZQuery
+    SQL.Strings = (
+      'select clientes.clienteId'
+      '           ,clientes.nome'
+      '           ,clientes.cidade'
+      '           ,clientes.cep'
+      '           ,clientes.telefone'
+      '           ,clientes.datanascimento'
+      '           ,clientes.estadoId'
+      '           ,estados.estado'
+      '  from clientes'
+      '  inner join estados on estados.Id = clientes.estadoId'
+      '')
+    Left = 548
+    object QryListagemclienteId: TIntegerField
+      DisplayLabel = 'C'#243'd. Cliente'
+      FieldName = 'clienteId'
+      ReadOnly = True
+    end
+    object QryListagemnome: TWideStringField
+      DisplayLabel = 'Nome'
+      FieldName = 'nome'
+      Size = 60
+    end
+    object QryListagemcidade: TWideStringField
+      DisplayLabel = 'Cidade'
+      FieldName = 'cidade'
+      Size = 50
+    end
+    object QryListagemcep: TWideStringField
+      DisplayLabel = 'CEP'
+      FieldName = 'cep'
+      Size = 10
+    end
+    object QryListagemtelefone: TWideStringField
+      DisplayLabel = 'Telefone'
+      FieldName = 'telefone'
+      Size = 14
+    end
+    object QryListagemdatanascimento: TDateTimeField
+      DisplayLabel = 'Data de Nascimento'
+      FieldName = 'datanascimento'
+    end
+    object QryListagemestadoId: TIntegerField
+      FieldName = 'estadoId'
+    end
+    object QryListagemestado: TWideStringField
+      DisplayLabel = 'Estado'
+      FieldName = 'estado'
+      Required = True
+      Size = 2
+    end
+  end
+  object QryEstados: TZQuery
+    Connection = dtmPrincipal.ConexaoDB
+    SQL.Strings = (
+      'select id, estado from estados')
+    Params = <>
+    Left = 740
+    Top = 48
+    object QryEstadosid: TIntegerField
+      FieldName = 'id'
+      ReadOnly = True
+    end
+    object QryEstadosestado: TWideStringField
+      FieldName = 'estado'
+      Required = True
+      Size = 2
+    end
+  end
+  object dtsEstados: TDataSource
+    DataSet = QryEstados
+    Left = 804
+    Top = 40
+  end
+end

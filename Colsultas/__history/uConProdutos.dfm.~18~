@@ -1,0 +1,192 @@
+inherited frmConProdutos: TfrmConProdutos
+  Caption = 'frmConProdutos'
+  ClientHeight = 536
+  ClientWidth = 1031
+  ExplicitWidth = 1037
+  ExplicitHeight = 565
+  PixelsPerInch = 96
+  TextHeight = 13
+  inherited pgcPrincipal: TPageControl
+    Width = 1031
+    Height = 489
+    ExplicitWidth = 1031
+    ExplicitHeight = 489
+    inherited tabListagem: TTabSheet
+      ExplicitLeft = 4
+      ExplicitTop = 24
+      ExplicitWidth = 1023
+      ExplicitHeight = 461
+      inherited pnlListagemTopo: TPanel
+        Width = 1023
+        ExplicitWidth = 1023
+        inherited lblIndice: TLabel
+          Left = 9
+          Top = 6
+          Width = 78
+          Caption = 'Campo Pesquisa'
+          ExplicitLeft = 9
+          ExplicitTop = 6
+          ExplicitWidth = 78
+        end
+      end
+      inherited grdListagem: TDBGrid
+        Width = 1023
+        Height = 395
+        Columns = <
+          item
+            Expanded = False
+            FieldName = 'produtoid'
+            Width = 91
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'nome'
+            Width = 286
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'descricao'
+            Width = 71
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'valor'
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'quantidade'
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'Categoria'
+            Visible = True
+          end>
+      end
+    end
+    inherited tabManutencao: TTabSheet
+      ExplicitLeft = 4
+      ExplicitTop = 24
+      ExplicitWidth = 1023
+      ExplicitHeight = 461
+    end
+  end
+  inherited pnlRodape: TPanel
+    Top = 489
+    Width = 1031
+    ExplicitTop = 489
+    ExplicitWidth = 1031
+    DesignSize = (
+      1031
+      47)
+    inherited btnNovo: TBitBtn
+      Left = 784
+      Top = 6
+      TabOrder = 4
+      Visible = False
+      ExplicitLeft = 784
+      ExplicitTop = 6
+    end
+    inherited btnAlterar: TBitBtn
+      Left = 784
+      Top = 6
+      TabOrder = 3
+      Visible = False
+      ExplicitLeft = 784
+      ExplicitTop = 6
+    end
+    inherited btnCancelar: TBitBtn
+      Left = 784
+      Top = 6
+      Visible = False
+      ExplicitLeft = 784
+      ExplicitTop = 6
+    end
+    inherited btnGravar: TBitBtn
+      Left = 784
+      Top = 6
+      TabOrder = 1
+      Visible = False
+      ExplicitLeft = 784
+      ExplicitTop = 6
+    end
+    inherited btnApagar: TBitBtn
+      Left = 784
+      Top = 6
+      TabOrder = 0
+      Visible = False
+      ExplicitLeft = 784
+      ExplicitTop = 6
+    end
+    inherited btnFechar: TBitBtn
+      Left = 947
+      Top = 12
+      TabOrder = 5
+      ExplicitLeft = 947
+      ExplicitTop = 12
+    end
+    inherited btnNavigator: TDBNavigator
+      Left = 304
+      Top = 14
+      Width = 368
+      Hints.Strings = ()
+      TabOrder = 7
+      ExplicitLeft = 304
+      ExplicitTop = 14
+      ExplicitWidth = 368
+    end
+    object btnSelecionar: TBitBtn
+      Left = 32
+      Top = 14
+      Width = 75
+      Height = 25
+      Caption = 'SELECIONAR'
+      TabOrder = 6
+      OnClick = btnSelecionarClick
+    end
+  end
+  inherited QryListagem: TZQuery
+    SQL.Strings = (
+      
+        'Select produtos.produtoid, produtos.nome, produtos.descricao, pr' +
+        'odutos.valor,'
+      
+        'produtos.quantidade, produtos.categoriaId, categorias.descricao ' +
+        'as Categoria'
+      'from produtos'
+      
+        'inner join categorias on categorias.categoriaId= produtos.catego' +
+        'riaId;')
+    object QryListagemprodutoid: TIntegerField
+      FieldName = 'produtoid'
+      ReadOnly = True
+    end
+    object QryListagemnome: TWideStringField
+      FieldName = 'nome'
+      Size = 60
+    end
+    object QryListagemdescricao: TWideStringField
+      FieldName = 'descricao'
+      Size = 255
+    end
+    object QryListagemvalor: TExtendedField
+      FieldName = 'valor'
+      Precision = 19
+    end
+    object QryListagemquantidade: TExtendedField
+      FieldName = 'quantidade'
+      Precision = 19
+    end
+    object QryListagemcategoriaId: TIntegerField
+      FieldName = 'categoriaId'
+    end
+    object QryListagemCategoria: TWideStringField
+      FieldName = 'Categoria'
+      Size = 30
+    end
+  end
+end

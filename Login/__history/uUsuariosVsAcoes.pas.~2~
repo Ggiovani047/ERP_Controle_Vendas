@@ -1,0 +1,28 @@
+unit uUsuariosVsAcoes;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls;
+
+type
+  TfrmUsuariosVsAcoes = class(TForm)
+    Panel1: TPanel;
+    Panel2: TPanel;
+    Panel3: TPanel;
+    Splitter1: TSplitter;
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  frmUsuariosVsAcoes: TfrmUsuariosVsAcoes;
+
+implementation
+
+{$R *.dfm}
+
+end.

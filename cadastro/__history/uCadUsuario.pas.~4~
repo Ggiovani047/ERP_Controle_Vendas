@@ -1,0 +1,33 @@
+unit uCadUsuario;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics, cCadUsuario,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, uTelaHeranca, Data.DB, ZAbstractRODataset, ZAbstractDataset, ZDataset, Vcl.DBCtrls,
+  Vcl.Grids, Vcl.DBGrids, Vcl.StdCtrls, Vcl.Buttons, Vcl.Mask, Vcl.ExtCtrls, Vcl.ComCtrls, uEnum;
+
+type
+  TfrmCadUsuario = class(TfrmTelaHeranca)
+    QryListagemusuarioId: TIntegerField;
+    QryListagemnome: TWideStringField;
+    QryListagemsenha: TWideStringField;
+    edtUsuarioId: TLabeledEdit;
+    edtNome: TLabeledEdit;
+    edtSenha: TLabeledEdit;
+  private
+    { Private declarations }
+    function Gravar(EstadoDoCadastro:TEstadoDoCadastro): Boolean; override;
+    function Apagar:Boolean; override;
+  public
+    { Public declarations }
+  end;
+
+var
+  frmCadUsuario: TfrmCadUsuario;
+
+implementation
+
+{$R *.dfm}
+
+end.

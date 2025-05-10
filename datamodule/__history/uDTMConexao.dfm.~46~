@@ -1,0 +1,25 @@
+object dtmPrincipal: TdtmPrincipal
+  Height = 173
+  Width = 242
+  PixelsPerInch = 120
+  object ConexaoDB: TZConnection
+    ControlsCodePage = cCP_UTF16
+    Catalog = ''
+    Properties.Strings = (
+      'RawStringEncoding=DB_CP')
+    TransactIsolationLevel = tiReadCommitted
+    Connected = True
+    DisableSavepoints = False
+    HostName = '.\SERVERCURSO'
+    Port = 1433
+    Database = 
+      'Provider=SQLOLEDB.1;Integrated Security=SSPI;Persist Security In' +
+      'fo=False;Initial Catalog=teste;Data Source=BOOK-T51NR2LNB0\SERVE' +
+      'RCURSO'
+    User = ''
+    Password = ''
+    Protocol = 'ado'
+    Left = 125
+    Top = 48
+  end
+end

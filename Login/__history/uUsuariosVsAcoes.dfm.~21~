@@ -1,0 +1,235 @@
+object frmUsuariosVsAcoes: TfrmUsuariosVsAcoes
+  Left = 0
+  Top = 0
+  Caption = 'Usu'#225'rios Vs A'#231#245'es'
+  ClientHeight = 430
+  ClientWidth = 833
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  Position = poScreenCenter
+  OnClose = FormClose
+  OnShow = FormShow
+  PixelsPerInch = 96
+  TextHeight = 13
+  object Splitter1: TSplitter
+    Left = 224
+    Top = 0
+    Width = 4
+    Height = 389
+    ExplicitLeft = 226
+  end
+  object Panel1: TPanel
+    Left = 0
+    Top = 0
+    Width = 224
+    Height = 389
+    Align = alLeft
+    TabOrder = 0
+    object grdUsuarios: TDBGrid
+      Left = 1
+      Top = 1
+      Width = 222
+      Height = 387
+      Align = alClient
+      DataSource = dtsUsuario
+      Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgTabs, dgRowSelect, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
+      TabOrder = 0
+      TitleFont.Charset = DEFAULT_CHARSET
+      TitleFont.Color = clWindowText
+      TitleFont.Height = -11
+      TitleFont.Name = 'Tahoma'
+      TitleFont.Style = []
+      Columns = <
+        item
+          Expanded = False
+          FieldName = 'usuarioId'
+          Visible = True
+        end
+        item
+          Expanded = False
+          FieldName = 'Nome'
+          Width = 132
+          Visible = True
+        end>
+    end
+  end
+  object Panel2: TPanel
+    Left = 228
+    Top = 0
+    Width = 605
+    Height = 389
+    Align = alClient
+    TabOrder = 1
+    object grdAcoes: TDBGrid
+      Left = 1
+      Top = 1
+      Width = 603
+      Height = 387
+      Align = alClient
+      DataSource = dtsAcoes
+      Options = [dgTitles, dgColumnResize, dgColLines, dgTabs, dgRowSelect, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
+      TabOrder = 0
+      TitleFont.Charset = DEFAULT_CHARSET
+      TitleFont.Color = clWindowText
+      TitleFont.Height = -11
+      TitleFont.Name = 'Tahoma'
+      TitleFont.Style = []
+      OnDrawColumnCell = grdAcoesDrawColumnCell
+      OnDblClick = grdAcoesDblClick
+      Columns = <
+        item
+          Expanded = False
+          FieldName = 'usuarioId'
+          Visible = False
+        end
+        item
+          Expanded = False
+          FieldName = 'acaoAcessoId'
+          Visible = False
+        end
+        item
+          Expanded = False
+          FieldName = 'descricao'
+          Width = 423
+          Visible = True
+        end
+        item
+          Expanded = False
+          FieldName = 'ativo'
+          Visible = False
+        end>
+    end
+  end
+  object Panel3: TPanel
+    Left = 0
+    Top = 389
+    Width = 833
+    Height = 41
+    Align = alBottom
+    TabOrder = 2
+    DesignSize = (
+      833
+      41)
+    object btnFechar: TBitBtn
+      Left = 757
+      Top = 6
+      Width = 68
+      Height = 25
+      ParentCustomHint = False
+      Anchors = [akTop, akRight]
+      Caption = '&FECHAR'
+      Glyph.Data = {
+        42040000424D4204000000000000420000002800000010000000100000000100
+        20000300000000040000130B0000130B000000000000000000000000FF0000FF
+        0000FF0000000000000000000000000000000000000000000000000000000000
+        0000000000000000000000000000000000000000000000000000000000000000
+        00000000000000000000000000000000000000000000FF831340FF811180FF81
+        1180FF811180FF811180FF811180FF811180FF811180FF811180FF811180FF83
+        13400000000000000000000000000000000000000000FF8A1FC0FF891DFFFF8F
+        26FFFF8F26FFFF8F26FFFF8F26FFFF8F26FFFF8F26FFFF8F26FFFF891DFFFF81
+        11800000000000000000000000000000000000000000FF8E26C0FF9531FFFFA8
+        50FFFFA850FFFFA850FFFFA850FFFFA850FFFFA850FFFFA850FFFF9531FFFF81
+        11800000000000000000000000000000000000000000FF9F42A0FFA750FFFFB3
+        64FFFFB364FFFFAE5CFFFFB262FFFFB364FFFFB364FFFFB364FFFF9A3BFFFF81
+        11800000000000000000000000000000000000000000FFBD7780FFBD78FFFFBD
+        78FFFFBD78FFFFA249FFFF9532FFFFBC76FFFFBD78FFFFBD78FFFF9F45FFFF81
+        11800000000000000000000000000000000000000000FFC78980FFC78AFFFFC7
+        8AFFFFC78AFFFFC78AFFFFA249FFFF9838FFFFC687FFFFC78AFFFFA44EFFFF81
+        118000000000FF831244FF811288FF811288FF811288FF993BC4FFA653FFFFA6
+        53FFFFA653FFFFA653FFFFA653FFFF8F27FFFF9B3EFFFFCF99FFFFA957FFFF81
+        118000000000FF83113CFF821177FF821177FF821177FFA249BBFFB164FFFFB1
+        64FFFFB164FFFFB164FFFFB164FFFF9533FFFF9E43FFFFD8AAFFFFAD5FFFFF81
+        11800000000000000000000000000000000000000000FFE1BB80FFE1BCFFFFE1
+        BCFFFFE1BCFFFFE1BCFFFFAF62FFFFA047FFFFE0B8FFFFE1BCFFFFB167FFFF81
+        11800000000000000000000000000000000000000000FFE7C780FFE7C7FFFFE7
+        C7FFFFE7C7FFFFBA76FFFFA14AFFFFE5C2FFFFE7C7FFFFE7C7FFFFB46CFFFF81
+        11800000000000000000000000000000000000000000FFC082A0FFD09FFFFFEA
+        CDFFFFEACDFFFFDFBAFFFFE7C8FFFFEACDFFFFEACDFFFFEACDFFFFB66FFFFF81
+        11800000000000000000000000000000000000000000FFA34FC0FFB66FFFFFEA
+        CDFFFFEACDFFFFEACDFFFFEACDFFFFEACDFFFFEACDFFFFEACDFFFFB66FFFFF81
+        11800000000000000000000000000000000000000000FFA34FC0FF9C41FFFFB6
+        6FFFFFB66FFFFFB66FFFFFB66FFFFFB66FFFFFB66FFFFFB66FFFFF9C41FFFF81
+        11800000000000000000000000000000000000000000FF831340FF811180FF81
+        1180FF811180FF811180FF811180FF811180FF811180FF811180FF811180FF83
+        1340000000000000000000000000000000000000000000000000000000000000
+        0000000000000000000000000000000000000000000000000000000000000000
+        000000000000}
+      TabOrder = 0
+      OnClick = btnFecharClick
+    end
+  end
+  object QryUsuario: TZQuery
+    Connection = dtmPrincipal.ConexaoDB
+    AfterScroll = QryUsuarioAfterScroll
+    SQL.Strings = (
+      'select usuarioId, Nome from usuarios')
+    Params = <>
+    Left = 40
+    Top = 112
+    object QryUsuariousuarioId: TIntegerField
+      DisplayLabel = 'C'#243'd. Usu'#225'rio'
+      FieldName = 'usuarioId'
+      ReadOnly = True
+    end
+    object QryUsuarioNome: TWideStringField
+      FieldName = 'Nome'
+      Required = True
+      Size = 50
+    end
+  end
+  object QryAcoes: TZQuery
+    Connection = dtmPrincipal.ConexaoDB
+    SQL.Strings = (
+      'select ua. usuarioId, ua.acaoAcessoId, a.descricao,ua.ativo'
+      'from usuariosAcaoAcesso as ua'
+      'inner join acaoAcesso as a on a.acaoAcessoId = ua.acaoAcessoId'
+      'where ua.usuarioId=:usuarioId')
+    Params = <
+      item
+        DataType = ftUnknown
+        Name = 'usuarioId'
+        ParamType = ptUnknown
+      end>
+    Left = 420
+    Top = 24
+    ParamData = <
+      item
+        DataType = ftUnknown
+        Name = 'usuarioId'
+        ParamType = ptUnknown
+      end>
+    object QryAcoesusuarioId: TIntegerField
+      FieldName = 'usuarioId'
+      ReadOnly = True
+    end
+    object QryAcoesacaoAcessoId: TIntegerField
+      FieldName = 'acaoAcessoId'
+      Required = True
+    end
+    object QryAcoesdescricao: TWideStringField
+      DisplayLabel = 'Descri'#231#227'o'
+      FieldName = 'descricao'
+      Required = True
+      Size = 100
+    end
+    object QryAcoesativo: TBooleanField
+      FieldName = 'ativo'
+      Required = True
+    end
+  end
+  object dtsUsuario: TDataSource
+    DataSet = QryUsuario
+    Left = 120
+    Top = 80
+  end
+  object dtsAcoes: TDataSource
+    DataSet = QryAcoes
+    Left = 484
+    Top = 88
+  end
+end

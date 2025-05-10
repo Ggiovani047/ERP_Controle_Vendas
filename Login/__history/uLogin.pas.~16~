@@ -1,0 +1,97 @@
+unit uLogin;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics, cUsuarioLogado,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Buttons, cCadUsuario, uDTMConexao,
+  Vcl.ExtCtrls, Vcl.Imaging.pngimage;
+
+type
+  TfrmLogin = class(TForm)
+    btnFechar: TBitBtn;
+    btnAcessar: TBitBtn;
+    Label1: TLabel;
+    Label2: TLabel;
+    edtUsuario: TEdit;
+    edtSenha: TEdit;
+    Panel1: TPanel;
+    Image1: TImage;
+    procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
+    procedure FormShow(Sender: TObject);
+    procedure btnFecharClick(Sender: TObject);
+    procedure btnAcessarClick(Sender: TObject);
+    procedure edtUsuarioKeyPress(Sender: TObject; var Key: Char);
+  private
+    { Private declarations }
+    bFechar: Boolean;
+    procedure FecharFormulario;
+    procedure FecharAplicacao;
+  public
+    { Public declarations }
+  end;
+
+var
+  frmLogin: TfrmLogin;
+
+implementation
+
+uses uPrincipal;
+
+{$R *.dfm}
+
+procedure TfrmLogin.btnAcessarClick(Sender: TObject);
+var oUsuario: TUsuario;
+begin
+  try
+    oUsuario:=TUsuario.Create(dtmprincipal.conexaoDB);
+    if oUsuario.Logar(edtUsuario.Text, edtSenha.Text) then begin
+      oUsuarioLogado.codigo := oUsuario.codigo;
+      oUsuarioLogado.nome         := oUsuario.nome;
+      oUsuarioLogado.senha        := oUsuario.senha;
+      FecharFormulario;
+    end
+    else  begin
+      MessageDlg('Usuário Inválido',mtInformation,[mbOK],0);
+      edtUsuario.SetFocus;
+    end;
+
+  finally
+    if Assigned(oUsuario) then
+      FreeAndNil(oUsuario);
+  end;
+end;
+
+procedure TfrmLogin.FecharFormulario;
+begin
+  bFechar := True;
+  Close;
+end;
+
+procedure TfrmLogin.FecharAplicacao;
+begin
+  bFechar := True;
+  Application.Terminate;
+end;
+
+procedure TfrmLogin.btnFecharClick(Sender: TObject);
+begin
+  FecharAplicacao;
+end;
+
+procedure TfrmLogin.edtUsuarioKeyPress(Sender: TObject; var Key: Char);
+begin
+  Key := UpCase(Key);
+end;
+
+procedure TfrmLogin.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
+begin
+  CanClose:=bFechar
+end;
+
+procedure TfrmLogin.FormShow(Sender: TObject);
+begin
+  bFechar:= False;
+end;
+
+end.

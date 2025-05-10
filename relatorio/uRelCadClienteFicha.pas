@@ -1,0 +1,92 @@
+unit uRelCadClienteFicha;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, uDTMVenda, uDTMConexao, ZConnection, ZAbstractRODataset,
+  ZAbstractDataset, ZDataset, Data.DB, RLFilters, RLPDFFilter, RLReport, RLXLSFilter, RLXLSXFilter;
+
+type
+  TfrmrelCadClienteFicha = class(TForm)
+    QryCliente: TZQuery;
+    dtsCliente: TDataSource;
+    RLPDFFilter1: TRLPDFFilter;
+    Relatorio: TRLReport;
+    Cabecalho: TRLBand;
+    RLLabel1: TRLLabel;
+    RLDraw1: TRLDraw;
+    Rodape: TRLBand;
+    RLDraw2: TRLDraw;
+    RLSystemInfo1: TRLSystemInfo;
+    RLSystemInfo2: TRLSystemInfo;
+    RLSystemInfo3: TRLSystemInfo;
+    RLLabel2: TRLLabel;
+    RLLabel3: TRLLabel;
+    RLBand1: TRLBand;
+    RLDBText1: TRLDBText;
+    RLBand2: TRLBand;
+    RLXLSXFilter1: TRLXLSXFilter;
+    RLXLSFilter1: TRLXLSFilter;
+    RLDBText4: TRLDBText;
+    QryClienteclienteId: TIntegerField;
+    QryClientenome: TWideStringField;
+    QryClienteendereco: TWideStringField;
+    QryClientecidade: TWideStringField;
+    QryClientebairro: TWideStringField;
+    QryClientecep: TWideStringField;
+    QryClientetelefone: TWideStringField;
+    QryClienteemail: TWideStringField;
+    QryClientedataNascimento: TDateTimeField;
+    QryClienteestadoId: TIntegerField;
+    QryClienteEstado: TWideStringField;
+    RLDBText5: TRLDBText;
+    RLDBText7: TRLDBText;
+    RLDBText8: TRLDBText;
+    RLDBText9: TRLDBText;
+    RLDBText10: TRLDBText;
+    RLDraw3: TRLDraw;
+    RLLabel6: TRLLabel;
+    RLLabel7: TRLLabel;
+    RLLabel8: TRLLabel;
+    RLLabel9: TRLLabel;
+    RLLabel10: TRLLabel;
+    RLLabel11: TRLLabel;
+    RLLabel12: TRLLabel;
+    RLLabel13: TRLLabel;
+    RLDBText6: TRLDBText;
+    RLLabel4: TRLLabel;
+    RLLabel5: TRLLabel;
+    RLDBText2: TRLDBText;
+    RLDBText3: TRLDBText;
+    RLAngleLabel2: TRLAngleLabel;
+    procedure FormCreate(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
+
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  frmrelCadClienteFicha: TfrmrelCadClienteFicha;
+
+implementation
+
+
+
+{$R *.dfm}
+
+
+procedure TfrmrelCadClienteFicha.FormCreate(Sender: TObject);
+begin
+   QryCliente.Open;
+end;
+
+procedure TfrmrelCadClienteFicha.FormDestroy(Sender: TObject);
+begin
+    QryCliente.Close;
+end;
+
+end.

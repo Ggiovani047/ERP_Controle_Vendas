@@ -1,0 +1,95 @@
+object DTMGrafico: TDTMGrafico
+  OldCreateOrder = False
+  Height = 188
+  Width = 275
+  object QryProdutosEstoque: TZQuery
+    Connection = dtmPrincipal.ConexaoDB
+    SQL.Strings = (
+      
+        'SELECT CONVERT(VARCHAR, produtoId) + '#39' - '#39'+nome AS Label, Quanti' +
+        'dade AS '
+      'Value FROM produtos')
+    Params = <>
+    Left = 25
+    Top = 10
+    object QryProdutosEstoqueLabel: TWideStringField
+      FieldName = 'Label'
+      ReadOnly = True
+      Size = 93
+    end
+    object QryProdutosEstoqueValue: TFloatField
+      FieldName = 'Value'
+    end
+  end
+  object QryVendaValorPorCliente: TZQuery
+    Connection = dtmPrincipal.ConexaoDB
+    SQL.Strings = (
+      
+        'SELECT CONVERT(VARCHAR, vendas.clienteId) + '#39'-'#39'+clientes.nome As' +
+        ' Label,'
+      'SUM(vendas.totalvenda) as  Value FROM Vendas'
+      'INNER JOIN clientes ON clientes.clienteId = vendas.clienteId'
+      
+        'WHERE vendas.dataVenda BETWEEN CONVERT(DATE, GETDATE()-7) AND CO' +
+        'NVERT(DATE, GETDATE())'
+      'GROUP BY vendas.clienteId, clientes.nome')
+    Params = <>
+    Left = 104
+    Top = 8
+    object QryVendaValorPorClienteLabel: TWideStringField
+      FieldName = 'Label'
+      ReadOnly = True
+      Size = 91
+    end
+    object QryVendaValorPorClienteValue: TFloatField
+      FieldName = 'Value'
+      ReadOnly = True
+    end
+  end
+  object Qry10ProdutoaMaisVendidos: TZQuery
+    Connection = dtmPrincipal.ConexaoDB
+    SQL.Strings = (
+      
+        'SELECT TOP 10 CONVERT(VARCHAR, vi.produtoId) + '#39'-'#39'+p.nome as Lab' +
+        'el,'
+      'SUM(vi.totalproduto) as Value'
+      'FROM vendasItens as vi'
+      'INNER JOIN produtos AS p ON p.produtoId = vi.produtoId'
+      'GROUP BY vi.produtoId, p.nome')
+    Params = <>
+    Left = 48
+    Top = 64
+    object Qry10ProdutoaMaisVendidosLabel: TWideStringField
+      FieldName = 'Label'
+      ReadOnly = True
+      Size = 91
+    end
+    object Qry10ProdutoaMaisVendidosValue: TExtendedField
+      FieldName = 'Value'
+      ReadOnly = True
+      Precision = 19
+    end
+  end
+  object QryVendasDataUltimaSemana: TZQuery
+    Connection = dtmPrincipal.ConexaoDB
+    SQL.Strings = (
+      
+        'SELECT vendas.dataVenda AS Label, SUM(vendas.totalVenda) AS Valu' +
+        'e'
+      'FROM Vendas'
+      'WHERE vendas.dataVenda BETWEEN CONVERT(DATE, GETDATE()-7) AND '
+      'CONVERT(DATE, GETDATE())'
+      'GROUP BY vendas.dataVenda')
+    Params = <>
+    Left = 184
+    Top = 80
+    object QryVendasDataUltimaSemanaLabel: TDateTimeField
+      FieldName = 'Label'
+    end
+    object QryVendasDataUltimaSemanaValue: TExtendedField
+      FieldName = 'Value'
+      ReadOnly = True
+      Precision = 19
+    end
+  end
+end

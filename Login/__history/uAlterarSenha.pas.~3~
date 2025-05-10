@@ -1,0 +1,55 @@
+unit uAlterarSenha;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Buttons;
+
+type
+  TfrmAlterarSenha = class(TForm)
+    btnAcessar: TBitBtn;
+    Label1: TLabel;
+    edtSenhaNova: TEdit;
+    edtRepetirNovaSenha: TEdit;
+    Label2: TLabel;
+    btnFechar: TBitBtn;
+    Label3: TLabel;
+    edtSenhaAtual: TEdit;
+    procedure FormShow(Sender: TObject);
+    procedure btnFecharClick(Sender: TObject);
+  private
+    procedure LimparEdits;
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  frmAlterarSenha: TfrmAlterarSenha;
+
+implementation
+
+{$R *.dfm}
+
+uses  cCadUsuario;
+
+procedure TfrmAlterarSenha.btnFecharClick(Sender: TObject);
+var oUsuario: TUsuario;
+begin
+   Close;
+end;
+
+procedure TfrmAlterarSenha.FormShow(Sender: TObject);
+begin
+  LimparEdits;
+end;
+
+procedure TfrmAlterarSenha.LimparEdits;
+begin
+  edtSenhaAtual.Clear;
+  edtSenhaNova.Clear;
+  edtRepetirNovaSenha.Clear;
+end;
+
+end.

@@ -1,0 +1,65 @@
+unit uConClientes;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, uTelaHeranca, Data.DB,
+  ZAbstractRODataset, ZAbstractDataset, ZDataset, Vcl.Buttons, Vcl.DBCtrls,
+  Vcl.Grids, Vcl.DBGrids, Vcl.StdCtrls, Vcl.Mask, Vcl.ExtCtrls, Vcl.ComCtrls;
+
+type
+  TfrmConClientes = class(TfrmTelaHeranca)
+    btnSelecionar: TBitBtn;
+    QryListagemclienteId: TZIntegerField;
+    QryListagemnome: TZUnicodeStringField;
+    QryListagemendereco: TZUnicodeStringField;
+    QryListagemcidade: TZUnicodeStringField;
+    QryListagembairro: TZUnicodeStringField;
+    QryListagemcep: TZUnicodeStringField;
+    QryListagemtelefone: TZUnicodeStringField;
+    QryListagememail: TZUnicodeStringField;
+    QryListagemdataNascimento: TZDateTimeField;
+    QryListagemestadoId: TZIntegerField;
+    QryListagemestado: TZUnicodeStringField;
+    procedure btnSelecionarClick(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure grdListagemDblClick(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+    idClienteSelecionado: Integer;
+    procedure colocarIdLkp(lkp: TDBLookupComboBox);
+  end;
+
+var
+  frmConClientes: TfrmConClientes;
+
+implementation
+
+{$R *.dfm}
+
+procedure TfrmConClientes.btnSelecionarClick(Sender: TObject);
+begin
+   idClienteSelecionado := QryListagem.FieldByName('clienteId').AsInteger;
+   Close;
+end;
+
+procedure TfrmConClientes.FormCreate(Sender: TObject);
+begin
+  inherited;
+  IndiceAtual:= 'nome';
+end;
+
+procedure TfrmConClientes.grdListagemDblClick(Sender: TObject);
+begin
+  btnSelecionar.Click;
+end;
+
+procedure TfrmConClientes.colocarIdLkp(lkp:TDBLookupComboBox);
+begin
+   lkp.KeyValue := idClienteSelecionado;
+end;
+
+end.

@@ -1,0 +1,192 @@
+unit cUsuarioLogado;
+
+interface
+
+
+
+uses
+ System.Classes, Vcl.Controls, Vcl.ExtCtrls, Vcl.Dialogs, System.SysUtils, uDTMConexao, Data.DB,
+ ZAbstractRODataset, ZAbstractDataset, ZDataset, ZConnection,Vcl.Menus, Vcl.Buttons, Vcl.Forms, RxToolEdit, RxCurrEdit;
+
+type
+  TUsuarioLogado = class
+    private
+    F_usuarioId: Integer;
+    F_nome: string;
+    F_senha: string;
+    procedure ItensMenuVisiveis(aMainPrincipal: TMainMenu);
+    procedure SetarItensMenuVisiveis(aCampo: TMenuItem);
+    procedure MenssageSemAcesso(Sender: TObject);
+
+    public
+      class function TenhoAcesso(aUsuarioId: Integer; aChave: string; aConexao: TZConnection): Boolean; static;
+      procedure ChecarPermissoes(aMainPrincipal: TMainMenu);
+      procedure OcultarSubmenus(aMenuItem: TMenuItem; aChave: string);
+      procedure CriarForm(aNomeForm: TFormClass; aUsuarioLogado: TusuarioLogado; aConexao: TZConnection);
+
+
+    published
+      property codigo: Integer read F_usuarioId write F_usuarioId;
+      property nome: string read F_nome write F_nome;
+      property senha: string read F_senha write F_senha;
+  end;
+
+implementation
+
+procedure TUsuarioLogado.ChecarPermissoes(aMainPrincipal: TMainMenu);
+var Qry: TZQuery; i, j:Integer;
+begin
+  try
+    Qry:=TZQuery.Create(nil);
+    Qry.Connection:=dtmPrincipal.ConexaoDB;
+    Qry.SQL.clear;
+    Qry.SQL.Add('SELECT ua.acaoAcessoId, ua.usuarioId,ua.ativo,a.chave FROM ' +
+                ' usuariosAcaoAcesso as ua ' +
+                ' inner join AcaoAcesso as a on a.acaoAcessoId = ua.acaoAcessoId ' +
+                ' WHERE ua.usuarioId = :usuarioId');
+    Qry.ParamByName('usuarioId').AsInteger := Self.F_usuarioId;
+    ItensMenuVisiveis(aMainPrincipal);
+    Qry.Open;
+    Qry.First;
+    while not Qry.Eof do begin
+      if Qry.FieldByName('ativo').AsBoolean=False then
+      begin
+        for i:=0 to aMainPrincipal.Items.Count-1 do begin
+          OcultarSubmenus(aMainPrincipal.Items[i], Qry.FieldByName('chave').AsString)
+        end;
+      end;
+      Qry.Next;
+    end;
+
+  finally
+    if Assigned(Qry) then
+      FreeAndNil(Qry);
+
+  end;
+end;
+
+procedure TUsuarioLogado.ItensMenuVisiveis(aMainPrincipal: TMainMenu);
+var i: Integer;
+   j: Integer;
+   MenuItem: TMenuItem;
+begin
+  for i:=0 to aMainPrincipal.Items.Count-1 do begin
+   SetarItensMenuVisiveis(aMainPrincipal.Items[i]);
+  end;
+end;
+
+procedure TUsuarioLogado.SetarItensMenuVisiveis(aCampo: TMenuItem);
+var j:Integer;
+begin
+   for j:=0 to aCampo.Count-1 do
+      aCampo.Items[j].Visible := True;
+end;
+
+
+procedure TUsuarioLogado.OcultarSubmenus(aMenuItem: TMenuItem; aChave: string);
+var j: Integer;
+begin
+  begin
+    for j := 0 to aMenuItem.Count - 1 do
+    begin
+      if aMenuItem.Items[j].Hint = aChave then
+        aMenuItem.Items[j].Visible := False;
+    end;
+  end;
+end;
+
+class function TUsuarioLogado.TenhoAcesso(aUsuarioId: Integer; aChave: string; aConexao: TZConnection): Boolean;
+var Qry:TZQuery;
+begin
+  try
+    result:=True;
+    Qry:=TZQuery.Create(nil);
+    Qry.Connection:=aConexao;
+    Qry.SQL.Clear;
+    Qry.SQL.Add('SELECT usuarioId '+
+                '  FROM usuariosAcaoAcesso '+
+                ' WHERE usuarioId=:usuarioId '+
+                '   AND acaoAcessoId=(SELECT TOP 1 acaoAcessoId from AcaoAcesso where chave='''+aChave+''')' +
+                ' AND ativo=1');
+    Qry.ParamByName('usuarioId').AsInteger:=aUsuarioId;
+    try
+      Qry.Open;
+    Except
+    on E:exception do begin
+      MessageDlg('Deu Erro: '+E.Message,mtError,[mbOK],0);
+      result:=False;
+    end;
+    end;
+
+    if Qry.IsEmpty then
+       Result:=False;
+  finally
+    if Assigned(Qry) then
+      FreeAndNil(Qry);
+
+  end;
+end;
+
+
+procedure TUsuarioLogado.CriarForm(aNomeForm: TFormClass; aUsuarioLogado: TusuarioLogado; aConexao: TZConnection);
+var form: TForm;
+    Qry: TZQuery;
+    i: Integer;
+begin
+  try
+    form := aNomeForm.Create(Application);
+    try
+      Qry:=TZQuery.Create(nil);
+      Qry.Connection:=aConexao;
+      Qry.SQL.clear;
+      Qry.SQL.Add('SELECT ua.acaoAcessoId, ua.usuarioId,ua.ativo,a.chave FROM ' +
+                  ' usuariosAcaoAcesso as ua ' +
+                  ' inner join AcaoAcesso as a on a.acaoAcessoId = ua.acaoAcessoId ' +
+                  ' WHERE ua.usuarioId = :usuarioId');
+      Qry.ParamByName('usuarioId').AsInteger := aUsuarioLogado.codigo;
+      Qry.Open;
+      Qry.First;
+      while not Qry.Eof do begin
+        if Qry.FieldByName('ativo').AsBoolean=False then
+        begin
+          for i:=0 to form.ComponentCount-1 do begin
+          if form.Components[i].Tag = 99 then begin
+            if (form.Components[i] is TBitbtn) then
+            begin
+              if form.Name+'_'+TBitBtn(form.Components[i]).Name = Qry.FieldByName('chave').AsString then
+                TBitBtn(form.Components[i]).OnClick:= MenssageSemAcesso
+            end
+            else if (form.Components[i] is TSpeedButton) then
+            begin
+              if form.Name+'_'+TSpeedButton(form.Components[i]).Name = Qry.FieldByName('chave').AsString then
+                TSpeedButton(form.Components[i]).OnClick:= MenssageSemAcesso;
+            end
+            else if (form.Components[i] is TCurrencyEdit) then
+            begin
+              if form.Name+'_'+TCurrencyEdit(form.Components[i]).Name = Qry.FieldByName('chave').AsString then
+                TCurrencyEdit(form.Components[i]).Enabled := False;
+            end;
+          end;
+        end;
+        end;
+        Qry.Next;
+      end;
+
+    finally
+      if assigned(Qry) then
+        FreeAndNil(Qry);
+
+    end;
+    form.ShowModal;
+    finally
+      if Assigned(form) then
+      form.Release;
+    end;
+end;
+
+procedure TUsuarioLogado.MenssageSemAcesso(Sender: TObject);
+begin
+  MessageDlg('Usuario: '+Self.F_nome+ ' não tem permissão de acesso a função ',mtWarning,[mbOK],0);
+end;
+
+end.

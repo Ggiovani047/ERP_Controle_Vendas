@@ -1,0 +1,96 @@
+inherited frmCadUsuario: TfrmCadUsuario
+  Caption = 'Cadastro de Usu'#225'rio'
+  PixelsPerInch = 96
+  TextHeight = 13
+  inherited pgcPrincipal: TPageControl
+    ActivePage = tabManutencao
+    inherited tabListagem: TTabSheet
+      inherited grdListagem: TDBGrid
+        Columns = <
+          item
+            Expanded = False
+            FieldName = 'usuarioId'
+            Width = 94
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'nome'
+            Width = 392
+            Visible = True
+          end>
+      end
+    end
+    inherited tabManutencao: TTabSheet
+      ExplicitLeft = 4
+      ExplicitTop = 24
+      ExplicitWidth = 894
+      ExplicitHeight = 354
+      object edtUsuarioId: TLabeledEdit
+        Tag = 1
+        Left = 13
+        Top = 39
+        Width = 121
+        Height = 21
+        EditLabel.Width = 33
+        EditLabel.Height = 13
+        EditLabel.Caption = 'C'#243'digo'
+        MaxLength = 10
+        NumbersOnly = True
+        TabOrder = 0
+      end
+      object edtNome: TLabeledEdit
+        Tag = 2
+        Left = 13
+        Top = 100
+        Width = 636
+        Height = 21
+        Hint = 'Nome'
+        EditLabel.Width = 33
+        EditLabel.Height = 13
+        EditLabel.Caption = 'Nome*'
+        MaxLength = 50
+        TabOrder = 1
+      end
+      object edtSenha: TLabeledEdit
+        Tag = 2
+        Left = 13
+        Top = 166
+        Width = 358
+        Height = 21
+        Hint = 'Nome'
+        EditLabel.Width = 36
+        EditLabel.Height = 13
+        EditLabel.Caption = 'Senha*'
+        MaxLength = 40
+        TabOrder = 2
+      end
+    end
+  end
+  inherited pnlRodape: TPanel
+    inherited btnNavigator: TDBNavigator
+      Hints.Strings = ()
+    end
+  end
+  inherited QryListagem: TZQuery
+    SQL.Strings = (
+      'select usuarioId, nome,senha from usuarios')
+    object QryListagemusuarioId: TIntegerField
+      DisplayLabel = 'C'#243'd. Usu'#225'rio'
+      FieldName = 'usuarioId'
+      ReadOnly = True
+    end
+    object QryListagemnome: TWideStringField
+      DisplayLabel = 'Nome'
+      FieldName = 'nome'
+      Required = True
+      Size = 50
+    end
+    object QryListagemsenha: TWideStringField
+      DisplayLabel = 'Senha'
+      FieldName = 'senha'
+      Required = True
+      Size = 40
+    end
+  end
+end

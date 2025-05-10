@@ -1,0 +1,59 @@
+program Vendas;
+
+uses
+  Vcl.Forms,
+  uPrincipal in 'uPrincipal.pas' {frmPrincipal},
+  uDTMConexao in 'datamodule\uDTMConexao.pas' {dtmPrincipal: TDataModule},
+  Enter in 'terceiros\Enter.pas',
+  uEnum in 'heranca\uEnum.pas',
+  uCadCategoria in 'cadastro\uCadCategoria.pas' {frmCadCategoria},
+  cCadCategoria in 'Classes\cCadCategoria.pas',
+  uCadCliente in 'cadastro\uCadCliente.pas' {frmCadCliente},
+  cCadCliente in 'Classes\cCadCliente.pas',
+  uCadProduto in 'cadastro\uCadProduto.pas' {frmCadProduto},
+  cCadProduto in 'Classes\cCadProduto.pas',
+  uFrmAtualizaDB in 'datamodule\uFrmAtualizaDB.pas' {frmAtualizaDB},
+  uDTMVenda in 'datamodule\uDTMVenda.pas' {dtmVenda: TDataModule},
+  uProVenda in 'processo\uProVenda.pas' {frmProVenda},
+  cProVenda in 'Classes\cProVenda.pas',
+  uTelaHeranca in 'heranca\uTelaHeranca.pas' {frmTelaHeranca},
+  cControleEstoque in 'Classes\cControleEstoque.pas',
+  uRelCadClienteFicha in 'relatorio\uRelCadClienteFicha.pas' {frmrelCadClienteFicha},
+  uConProdutos in 'Colsultas\uConProdutos.pas' {frmConProdutos},
+  uConClientes in 'Colsultas\uConClientes.pas' {frmConClientes},
+  uRelProVenda in 'relatorio\uRelProVenda.pas' {frmrelProVenda},
+  uRelCadCliente in 'relatorio\uRelCadCliente.pas' {frmrelCadCliente},
+  uRelCategoria in 'relatorio\uRelCategoria.pas' {frmrelCategoria},
+  uRelCadProduto in 'relatorio\uRelCadProduto.pas' {frmrelCadProduto},
+  uSelecionarData in 'relatorio\uSelecionarData.pas' {frmSelecionarData},
+  uRelCadProdutoComGrupoCategoria in 'relatorio\uRelCadProdutoComGrupoCategoria.pas' {frmrelCadProdutoComGrupoCategoria},
+  uRelVendaPorData in 'relatorio\uRelVendaPorData.pas' {frmrelVendaPorData},
+  uFuncaoCriptografia in 'heranca\uFuncaoCriptografia.pas',
+  uCadUsuario in 'cadastro\uCadUsuario.pas' {frmCadUsuario},
+  cCadUsuario in 'Classes\cCadUsuario.pas',
+  uLogin in 'Login\uLogin.pas' {frmLogin},
+  uAlterarSenha in 'Login\uAlterarSenha.pas' {frmAlterarSenha},
+  cUsuarioLogado in 'Login\cUsuarioLogado.pas',
+  cAtualizacaoBancoDeDados in 'Classes\cAtualizacaoBancoDeDados.pas',
+  cAtualizacaoTabelaMSSQL in 'Classes\cAtualizacaoTabelaMSSQL.pas',
+  Vcl.Themes,
+  Vcl.Styles,
+  cAtualizacaoCamposMSSQL in 'Classes\cAtualizacaoCamposMSSQL.pas',
+  cArquivoIni in 'Classes\cArquivoIni.pas',
+  cAcaoAcesso in 'Classes\cAcaoAcesso.pas',
+  uCadAcaoAcesso in 'cadastro\uCadAcaoAcesso.pas' {frmCadAcaoAcesso},
+  uUsuariosVsAcoes in 'Login\uUsuariosVsAcoes.pas' {frmUsuariosVsAcoes},
+  uDTMGrafico in 'datamodule\uDTMGrafico.pas' {DTMGrafico: TDataModule},
+  cFuncao in 'Classes\cFuncao.pas',
+  uConCategorias in 'Colsultas\uConCategorias.pas' {frmConCategorias},
+  cCep in 'Classes\cCep.pas';
+
+{$R *.res}
+
+begin
+  Application.Initialize;
+  Application.MainFormOnTaskbar := True;
+  TStyleManager.TrySetStyle('Windows10');
+  Application.CreateForm(TfrmPrincipal, frmPrincipal);
+  Application.Run;
+end.

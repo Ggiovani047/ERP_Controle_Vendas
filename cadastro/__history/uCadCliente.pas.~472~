@@ -1,0 +1,413 @@
+unit uCadCliente;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics, uFuncaoCriptografia,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, uTelaHeranca, Data.DB, ZAbstractRODataset, ZAbstractDataset, ZDataset, Vcl.DBCtrls,
+  Vcl.Grids, Vcl.DBGrids, cCadCliente,uEnum,uDTMConexao, Vcl.StdCtrls, Vcl.Buttons, Vcl.Mask, Vcl.ExtCtrls, Vcl.ComCtrls, RxToolEdit,
+  JvMenus, Vcl.Menus, cCep, System.RegularExpressions, System.MaskUtils;
+
+type
+  TfrmCadCliente = class(TfrmTelaHeranca)
+    edtNome: TLabeledEdit;
+    edtClienteId: TLabeledEdit;
+    edtCEP: TMaskEdit;
+    Label1: TLabel;
+    edtEndereco: TLabeledEdit;
+    edtBairro: TLabeledEdit;
+    edtCidade: TLabeledEdit;
+    ldlTelefone: TLabel;
+    edtEmail: TLabeledEdit;
+    edtDataNascimento: TDateEdit;
+    Label2: TLabel;
+    lkpEstado: TDBLookupComboBox;
+    QryEstados: TZQuery;
+    dtsEstados: TDataSource;
+    lblEstado: TLabel;
+    QryListagemclienteId: TIntegerField;
+    QryListagemnome: TWideStringField;
+    QryListagemcidade: TWideStringField;
+    QryListagemcep: TWideStringField;
+    QryListagemtelefone: TWideStringField;
+    QryListagemdatanascimento: TDateTimeField;
+    QryListagemestadoId: TIntegerField;
+    QryListagemestado: TWideStringField;
+    QryEstadosid: TIntegerField;
+    QryEstadosestado: TWideStringField;
+    edtTelefone: TEdit;
+    procedure FormCreate(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure btnNovoClick(Sender: TObject);
+    procedure btnAlterarClick(Sender: TObject);
+    procedure edtCEPExit(Sender: TObject);
+    procedure btnCancelarClick(Sender: TObject);
+    procedure btnGravarClick(Sender: TObject);
+    procedure edtEmailExit(Sender: TObject);
+    procedure edtTelefoneKeyPress(Sender: TObject; var Key: Char);
+    procedure edtTelefoneExit(Sender: TObject);
+  private
+    { Private declarations }
+    oCliente:TCliente;
+    function Apagar:Boolean; override;
+    function Gravar(EstadoDoCadastro:TEstadoDoCadastro):Boolean; override;
+    procedure AtivarBotoes(Flag: Boolean);
+    function EmailValido(const Email: string): Boolean;
+    function RemoveCaracteres(aString: string): String;
+  public
+    { Public declarations }
+  end;
+
+var
+  frmCadCliente: TfrmCadCliente;
+
+implementation
+
+{$R *.dfm}
+
+{$REGION 'Override'}
+
+function TfrmCadCliente.Apagar: Boolean;
+begin
+  if oCliente.Selecionar(QryListagem.FieldByName('clienteId').AsInteger) then begin
+    Result:=oCliente.Apagar;
+  end;
+end;
+
+
+procedure TfrmCadCliente.btnAlterarClick(Sender: TObject);
+var cep: string;
+begin
+  if oCliente.Selecionar(QryListagem.FieldByName('clienteId').AsInteger) then begin
+    edtClienteId.text            :=IntToStr(oCliente.codigo);
+    edtNome.Text                 :=oCliente.nome;
+    edtCEP.Text                  :=oCliente.cep;
+    edtEndereco.Text             :=oCliente.endereco;
+    edtBairro.Text               :=oCliente.bairro;
+    edtCidade.Text               :=oCliente.cidade;
+    edtTelefone.Text             :=oCliente.telefone;
+    edtEmail.Text                :=oCliente.email;
+    edtDataNascimento.Date       :=oCliente.dataNascimento;
+    lkpEstado.KeyValue           :=oCliente.estado;
+  end
+  else begin
+    btnCancelar.Click;
+    Abort;
+  end;
+  cep := StringReplace(edtCEP.Text, ' ', '',[rfReplaceAll]);
+  if Length(cep) = 9 then begin
+    edtCidade.Enabled := False;
+    lkpEstado.Enabled := False;
+    TCep.cep := StringReplace(edtCEP.Text, '-', '',[rfReplaceAll]);;
+  end;
+
+  inherited;
+end;
+
+procedure TfrmCadCliente.btnCancelarClick(Sender: TObject);
+begin
+  AtivarBotoes(True);
+  inherited;
+
+end;
+
+procedure TfrmCadCliente.btnGravarClick(Sender: TObject);
+begin
+  inherited;
+  TCep.cep := EmptyStr;
+end;
+
+procedure TfrmCadCliente.btnNovoClick(Sender: TObject);
+begin
+  inherited;
+  edtDataNascimento.Date:=Date;
+  edtNome.SetFocus;
+  AtivarBotoes(True);
+end;
+
+
+procedure TfrmCadCliente.edtCEPExit(Sender: TObject);
+var oCep: TCep; cep: String;
+begin
+  cep := StringReplace(edtCEP.Text, ' ', '',[rfReplaceAll]);
+  if Length(cep) = 1 then begin
+    AtivarBotoes(True);
+    Exit;
+  end;
+  if Length(cep) <> 9 then begin
+    MessageDlg('Este CEP é Inválido',mtInformation,[mbOK],0);
+    abort;
+  end;
+
+  if StringReplace(edtCEP.Text,'-','',[rfReplaceAll]) = TCep.cep then
+      Exit;
+
+  try
+    Screen.Cursor := crHourGlass;
+    oCep := TCep.Create(dtmPrincipal.ConexaoDB);
+
+    if oCep.ObterDados(StringReplace(edtCEP.Text,'-','',[rfReplaceAll])) then begin
+      edtEndereco.Text := oCep.endereco;
+      edtBairro.Text   := oCep.bairro;
+      edtCidade.Text   := oCep.cidade;
+      lkpEstado.KeyValue := StrToInt(oCep.estado);
+      AtivarBotoes(False);
+      edtBairro.SetFocus;
+    end
+    else begin
+      AtivarBotoes(True);
+      Abort;
+    end;
+  finally
+    Screen.Cursor := crDefault;
+    TCep.cep := EmptyStr;
+    if assigned(oCep) then
+      FreeAndNil(oCep);
+  end;
+end;
+
+procedure TfrmCadCliente.edtEmailExit(Sender: TObject);
+begin
+  inherited;
+  if edtEmail.Text = EmptyStr then
+    Exit;
+  if not EmailValido(edtEmail.Text) then begin
+    MessageDlg('Insira um E-mail válido',mtInformation,[mbOK],0);
+    Abort;
+  end;
+end;
+
+
+procedure TfrmCadCliente.edtTelefoneKeyPress(Sender: TObject; var Key: Char);
+var Num, Texto: string; CursorPos: Integer;
+begin
+  if not (Key in ['0'..'9', #8]) then begin
+    Key := #0;
+    Exit;
+  end;
+
+  if (Length(edtTelefone.Text) >= 15) and (key <> #8) then begin
+    Key := #0;
+    Exit;
+  end;
+
+  Num := Copy(edtTelefone.Text, 1, edtTelefone.SelStart)+Key+Copy(edtTelefone.Text, edtTelefone.SelStart+1, Length(edtTelefone.Text));
+  CursorPos := edtTelefone.SelStart;
+  Texto := edtTelefone.Text;
+  if Copy(Num,1,1) = '0' then begin
+    if Key <> #8 then begin
+    Num := Copy(edtTelefone.Text, 1, edtTelefone.SelStart)+Key+
+    Copy(edtTelefone.Text, edtTelefone.SelStart+1, Length(edtTelefone.Text));
+    Num := RemoveCaracteres(num);
+      case Length(Num) of
+      4: begin
+         edtTelefone.Text := Num+' ';
+         Key := #0;
+      end;
+      5..6: begin
+        edtTelefone.Text := Copy(Num,1,4)+' '+Copy(Num,5,3);
+        Key := #0;
+      end;
+      7: begin
+        edtTelefone.Text := Copy(Num,1,4)+' '+Copy(Num,5,3)+' ';
+        Key := #0;
+      end;
+      8..13: begin
+        edtTelefone.Text := Copy(Num,1,4)+' '+Copy(Num,5,3)+' '+Copy(Num,8,4);
+        Key := #0;
+      end;
+      14:
+        Key := #0;
+      end;
+      if Length(edtTelefone.Text) - Length(Texto) <= 1 then
+        edtTelefone.SelStart := CursorPos+1
+      else if Length(edtTelefone.Text) - Length(Texto) = 2 then
+        edtTelefone.SelStart := CursorPos+2
+      else if Length(edtTelefone.Text) - Length(Texto) = 3 then
+        edtTelefone.SelStart := CursorPos+3
+      else
+        edtTelefone.SelStart := Length(edtTelefone.Text)
+    end;
+  end
+  else begin
+    if Key <> #8 then begin
+      Num := Copy(edtTelefone.Text, 1, edtTelefone.SelStart)+Key+
+      Copy(edtTelefone.Text, edtTelefone.SelStart+1, Length(edtTelefone.Text));
+      edtTelefone.Text := RemoveCaracteres(edtTelefone.Text);
+      Num := RemoveCaracteres(Num);
+        case Length(Num) of
+          1: begin
+            edtTelefone.Text := '('+Copy(Num,1,2);
+            edtTelefone.SelStart := Length(edtTelefone.Text);
+            Key := #0;
+          end;
+          2: begin
+            edtTelefone.Text := '('+Copy(Num,1,2)+') ';
+            edtTelefone.SelStart := Length(edtTelefone.Text);
+            Key := #0;
+          end;
+          3..6: begin
+            edtTelefone.Text := '('+Copy(Num,1,2)+') '+Copy(Num,3,4);
+            edtTelefone.SelStart := Length(edtTelefone.Text);
+            Key := #0;
+          end;
+          7..10: begin
+            edtTelefone.Text := '('+Copy(Num,1,2)+') '+Copy(Num,3,4)+'-'+Copy(Num,7,4);
+            edtTelefone.SelStart := Length(edtTelefone.Text);
+            Key := #0;
+          end;
+          11: begin
+            edtTelefone.Text := '('+Copy(Num,1,2)+') '+Copy(Num,3,5)+'-'+Copy(Num,8,4);
+            edtTelefone.SelStart := Length(edtTelefone.Text);
+            Key := #0;
+          end;
+        end;
+        if Length(edtTelefone.Text) - Length(Texto) <= 1 then
+          edtTelefone.SelStart := CursorPos+1
+        else if Length(edtTelefone.Text) - Length(Texto) = 2 then
+          edtTelefone.SelStart := CursorPos+2
+        else if Length(edtTelefone.Text) - Length(Texto) = 3 then
+          edtTelefone.SelStart := CursorPos+3
+        else
+          edtTelefone.SelStart := Length(edtTelefone.Text)
+    end
+    else begin
+      if edtTelefone.SelLength > 0 then
+        Exit;
+
+      if edtTelefone.Text <> EmptyStr then begin
+
+        if edtTelefone.Text[edtTelefone.SelStart] in ['-','(',')', ' '] then begin
+          Key := #0;
+            Num := edtTelefone.Text;
+            Num := RemoveCaracteres(Num);
+          if edtTelefone.Text[edtTelefone.SelStart] = '-' then begin
+            edtTelefone.SelStart := CursorPos - 1;
+        end
+        else
+          edtTelefone.SelStart := CursorPos - 2;
+        end;
+        Num := edtTelefone.Text;
+        Delete(Num, edtTelefone.SelStart, 1);
+        Num := RemoveCaracteres(Num);
+
+        if Length(Copy(Num, 1,2)) < 1  then begin
+            edtTelefone.Text := RemoveCaracteres(edtTelefone.Text);
+            edtTelefone.SelStart := Length(edtTelefone.Text)
+        end
+        else if (Length(Copy(Num, 7,1)) < 1) and (edtTelefone.SelStart > 5) then begin
+            edtTelefone.Text := StringReplace(edtTelefone.Text,'-','',[rfReplaceAll]);
+            edtTelefone.SelStart := Length(edtTelefone.Text)
+        end
+        else if (Length(Num) = 10) then begin
+          edtTelefone.Text := RemoveCaracteres(edtTelefone.Text);
+          edtTelefone.Text := '('+Copy(Num,1,2)+') '+Copy(Num,3,4)+'-'+Copy(Num,7,4);
+          edtTelefone.SelStart := Length(edtTelefone.Text);
+          Key := #0;
+        end;
+      end;
+    end;
+  end;
+end;
+
+
+
+function TfrmCadCliente.RemoveCaracteres(aString: string): string;
+begin
+  aString:= StringReplace(aString, '-','',[rfReplaceAll]);
+  aString:= StringReplace(aString, '(','',[rfReplaceAll]);
+  aString:= StringReplace(aString, ')','',[rfReplaceAll]);
+  aString:= StringReplace(aString, ' ','',[rfReplaceAll]);
+  Result :=aString
+end;
+
+
+procedure TfrmCadCliente.edtTelefoneExit(Sender: TObject);
+var Telefone: string;
+begin
+  inherited;
+  Telefone := Trim(edtTelefone.Text);
+  if Length(Telefone) = 3 then
+    Exit;
+
+  if Length(Telefone) = 14 then begin
+
+    if not oCliente.VerificaTelefone(edtTelefone.Text) then begin
+      MessageDlg('Este DDD é inválido',mtInformation, [mbOK], 0);
+      Abort;
+    end;
+
+  end
+  else begin
+    MessageDlg('Telefone Inválido, confira o numero e tente novamente', mtInformation, [mbOK], 0);
+    Abort;
+  end;
+//
+
+end;
+
+procedure TfrmCadCliente.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  inherited;
+  if Assigned(oCliente) then
+    FreeAndNil(oCliente);
+  TCep.cep := EmptyStr;
+end;
+
+procedure TfrmCadCliente.FormCreate(Sender: TObject);
+begin
+  inherited;
+  oCliente:=TCliente.Create(dtmPrincipal.ConexaoDB);
+  QryEstados.Connection:=dtmPrincipal.ConexaoDB;
+  QryEstados.Open;
+  dtsEstados.DataSet:=QryEstados;
+  //IndiceAtual:='nome';
+end;
+
+function TfrmCadCliente.Gravar(EstadoDoCadastro: TEstadoDoCadastro): Boolean;
+begin
+  if edtClienteId.Text<>EmptyStr then
+    oCliente.codigo:=StrToInt(edtClienteId.Text)
+  else
+    oCliente.codigo:= 0;
+
+  oCliente.nome:= edtNome.Text;
+  oCliente.endereco:= edtEndereco.Text;
+  oCliente.cep:= edtCEP.Text;
+  oCliente.bairro:= edtBairro.Text;
+  oCliente.cidade:= edtCidade.Text;
+  oCliente.telefone:=edtTelefone.Text;
+  oCliente.email:= edtEmail.Text;
+  oCliente.estado:= lkpEstado.KeyValue;
+  oCliente.dataNascimento:= edtDataNascimento.Date;
+
+  if EstadoDoCadastro=ecInserir then
+    Result:= oCliente.Inserir
+  else if EstadoDoCadastro=ecAlterar then
+    Result:=oCliente.Atualizar;
+end;
+
+
+{$ENDREGION}
+
+procedure TfrmCadCliente.AtivarBotoes(Flag: Boolean);
+begin
+   edtCidade.Enabled := Flag;
+   lkpEstado.Enabled  :=  Flag;
+   if Flag then begin
+    edtEndereco.Text := EmptyStr;
+    edtBairro.Text   := EmptyStr;
+    edtCidade.Text   := EmptyStr;
+    lkpEstado.KeyValue := null;
+   end
+end;
+
+
+function TfrmCadCliente.EmailValido(const Email: string): Boolean;
+const
+  PadraoEmail = '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+(?:\.[a-zA-Z]{2,3}){1,4}$';
+begin
+  Result := TRegEx.IsMatch(Email, PadraoEmail);
+end;
+
+end.

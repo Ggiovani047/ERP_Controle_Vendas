@@ -1,0 +1,120 @@
+inherited frmCadCategoria: TfrmCadCategoria
+  Caption = 'Cadastro de Categorias'
+  ClientHeight = 464
+  ClientWidth = 864
+  ExplicitWidth = 870
+  ExplicitHeight = 493
+  PixelsPerInch = 96
+  TextHeight = 13
+  inherited pgcPrincipal: TPageControl
+    Width = 864
+    Height = 417
+    ExplicitWidth = 864
+    ExplicitHeight = 417
+    inherited tabListagem: TTabSheet
+      ExplicitWidth = 856
+      ExplicitHeight = 389
+      inherited pnlListagemTopo: TPanel
+        Width = 856
+        ExplicitWidth = 856
+      end
+      inherited grdListagem: TDBGrid
+        Width = 856
+        Height = 323
+        Columns = <
+          item
+            Expanded = False
+            FieldName = 'categoriaId'
+            Width = 86
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'descricao'
+            Width = 449
+            Visible = True
+          end>
+      end
+    end
+    inherited tabManutencao: TTabSheet
+      ExplicitWidth = 856
+      ExplicitHeight = 389
+      object edtCategoriaId: TLabeledEdit
+        Tag = 1
+        Left = 3
+        Top = 40
+        Width = 121
+        Height = 21
+        EditLabel.Width = 33
+        EditLabel.Height = 13
+        EditLabel.Caption = 'C'#243'digo'
+        MaxLength = 10
+        NumbersOnly = True
+        TabOrder = 0
+      end
+      object edtDescricao: TLabeledEdit
+        Tag = 2
+        Left = 3
+        Top = 88
+        Width = 358
+        Height = 21
+        EditLabel.Width = 52
+        EditLabel.Height = 13
+        EditLabel.Caption = 'Descri'#231#227'o*'
+        MaxLength = 30
+        TabOrder = 1
+      end
+    end
+  end
+  inherited pnlRodape: TPanel
+    Top = 417
+    Width = 864
+    ExplicitTop = 417
+    ExplicitWidth = 864
+    inherited btnNovo: TBitBtn
+      Left = 6
+      ExplicitLeft = 6
+    end
+    inherited btnAlterar: TBitBtn
+      Left = 98
+      ExplicitLeft = 98
+    end
+    inherited btnGravar: TBitBtn
+      Left = 283
+      ExplicitLeft = 283
+    end
+    inherited btnApagar: TBitBtn
+      Left = 374
+      ExplicitLeft = 374
+    end
+    inherited btnFechar: TBitBtn
+      Left = 788
+      Anchors = [akRight, akBottom]
+      ExplicitLeft = 788
+    end
+    inherited btnNavigator: TDBNavigator
+      Hints.Strings = ()
+    end
+  end
+  inherited QryListagem: TZQuery
+    SQL.Strings = (
+      'SELECT categoriaId,'
+      '       descricao '
+      '  FROM categorias')
+    Left = 556
+    Top = 40
+    object QryListagemcategoriaId: TIntegerField
+      DisplayLabel = 'C'#243'digo'
+      FieldName = 'categoriaId'
+      ReadOnly = True
+    end
+    object QryListagemdescricao: TWideStringField
+      DisplayLabel = 'Descri'#231#227'o'
+      FieldName = 'descricao'
+      Size = 30
+    end
+  end
+  inherited dtsListagem: TDataSource
+    Top = 40
+  end
+end

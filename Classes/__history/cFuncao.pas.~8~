@@ -1,0 +1,164 @@
+unit cFuncao;
+
+interface
+
+uses System.SysUtils, System.Classes, Vcl.Controls, Vcl.ExtCtrls,
+Vcl.Dialogs,ZAbstractConnection, ZConnection,Vcl.Forms,Vcl.Buttons,cAcaoAcesso,
+cUsuarioLogado,RLReport, Data.DB, ZAbstractRODataset, ZAbstractDataset, ZDataset,Vcl.Imaging.pngimage,
+Vcl.Imaging.jpeg, Vcl.Graphics, Vcl.ExtDlgs;
+
+type
+  TFuncao = class
+  private
+
+  public
+    class procedure CriarForm(aNomeForm: TFormClass; oUsuarioLogado:TUsuarioLogado; aConexao: TZConnection); static;
+    class procedure CriarRelatorio(aNomeForm: TFormClass; oUsuarioLogado:TUsuarioLogado; aConexao: TZConnection); static;
+    class procedure CarregarImagem(aImage:TImage); static;
+    class procedure limparImagem(var aImage:TImage); static;
+  end;
+
+
+implementation
+
+
+
+{ TFuncao }
+
+class procedure TFuncao.limparImagem(var aImage: TImage);
+begin
+  aimage.Picture.Assign(nil);
+end;
+
+class procedure TFuncao.CarregarImagem(aImage: TImage);
+var
+  Bmp, BmpTrans: TBitmap;
+  Jpg: TJPEGImage;
+  pic: TPicture;
+  Png: TPngImage;
+  opdSelecionar: TOpenPictureDialog;
+  iwidth: Integer;
+  iHeigth:Integer;
+begin
+  Try
+    iWidth:=160;
+    iheigth:=130;
+    opdSelecionar:=TOpenPictureDialog.Create(nil);
+    opdselecionar.Filter:='All (*.bmp;*.jpg; *.jpeg;*.png)|*.jpg; *.jpeg; *.bmp;*.png|Bitmaps ' +
+                          ' (*.bmp)|*.bmp|JPEG Image File (*.jpg;*.jpeg)|*.jpg; *.jpeg| ' +
+                          ' PNG(*.png)|*.png';
+    opdSelecionar.Title:='Selecione a imagem';
+    opdSelecionar.Execute;
+
+    if opdSelecionar.FileName<>EmptyStr then begin
+      if (pos('.JPG',Uppercase(opdSelecionar.FileName))>0) or (Pos('.JPEG',Uppercase(opdSelecionar.FileName)) > 0) then begin
+        Bmp := TBitmap.Create;
+        Jpg := TJPEGImage.Create;
+        Pic := TPicture.Create;
+        try
+          pic.LoadFromFile(opdSelecionar.FileName);
+          Jpg.Assign(pic);
+          Jpg.CompressionQuality := 7;
+          Bmp.Width :=iwidth;
+          Bmp.Height := iHeigth;
+          bmp.Canvas.StretchDraw(Rect(0,0,bmp.Width, Bmp.Height), Jpg);
+          aImage.Picture.Bitmap:=Bmp;
+        finally
+          Pic.Free;
+          Jpg.Free;
+          Bmp.Free;
+        end;
+      end
+      else if pos('.PNG',UpperCase(opdSelecionar.FileName))>0 then begin
+        Bmp := TBitmap.Create;
+        Png := TPngImage.Create;
+        pic := TPicture.Create;
+        try
+          pic.LoadFromFile(opdSelecionar.FileName);
+          png.Assign(pic);
+          Bmp.Width := iwidth;
+          bmp.Height := iHeigth;
+          Bmp.Canvas.StretchDraw(rect(0,0,Bmp.Width, Bmp.Height),png);
+
+          aImage.Picture.Bitmap:=Bmp
+        finally
+          Pic.Free;
+          Jpg.Free;
+          Bmp.Free;
+        end;
+      end
+      else begin
+        try
+          Bmp := TBitmap.Create;
+          BmpTrans:= TBitmap;
+          pic := TPicture.Create;
+
+          pic.LoadFromFile(opdSelecionar.FileName);
+          BmpTrans.Assign(Pic.Bitmap);
+          Bmp.Width := iwidth;
+          bmp.Height := iHeigth;
+          Bmp.Canvas.StretchDraw(Rect(0,0,Bmp.Width, Bmp.Height), Bmptrans);
+          aImage.Picture.Bitmap:=Bmp;
+        finally
+           Pic.Free;
+           BmpTrans.Free;
+           bmp.Free;
+        end;
+      end;
+    end;
+
+  Finally
+    freeAndNil(opdSelecionar);
+
+  End;
+
+end;
+
+class procedure TFuncao.CriarForm(aNomeForm: TFormClass; oUsuarioLogado: TUsuarioLogado; aConexao: TZConnection);
+var form: TForm;
+begin
+  try
+    form := aNomeForm.Create(Application);
+    if TUsuarioLogado.TenhoAcesso(oUsuarioLogado.codigo, form.name, aConexao) then
+    begin
+      form.ShowModal;
+    end
+    else begin
+      MessageDlg('Usuario: '+oUsuarioLogado.nome+', não tem permissão de acesso',mtWarning,[mbOK], 0);
+    end;
+
+  finally
+    if Assigned(form) then
+      form.Release;
+
+  end;
+end;
+
+class procedure TFuncao.CriarRelatorio(aNomeForm: TFormClass; oUsuarioLogado: TUsuarioLogado; aConexao: TZConnection);
+var form : TForm;
+    aRelatorio: TRLReport;
+    i: integer;
+begin
+  try
+    form := aNomeForm.Create(Application);
+    if TUsuarioLogado.TenhoAcesso(oUsuarioLogado.codigo, form.Name, aConexao) then begin
+      for i := 0 to form.ComponentCount-1 do
+        begin
+          if form.Components[i] is TRLReport then
+            begin
+              TRLReport(form.Components[i]).PreviewModal;
+              break;
+            end;
+        end;
+    end
+    else
+      MessageDlg('Usuario Sem permissão de Acesso ao relatório',mtWarning,[mbOK],0)
+  finally
+     if Assigned(form) then
+      form.Release;
+  end;
+end;
+
+
+
+end.

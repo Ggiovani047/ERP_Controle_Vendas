@@ -1,0 +1,72 @@
+unit uRelCadClienteFicha;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, uDTMVenda, uDTMConexao, ZConnection, ZAbstractRODataset,
+  ZAbstractDataset, ZDataset, Data.DB, RLFilters, RLPDFFilter, RLReport, RLXLSFilter, RLXLSXFilter;
+
+type
+  TfrmrelCadCliente = class(TForm)
+    QryCliente: TZQuery;
+    dtsCliente: TDataSource;
+    RLPDFFilter1: TRLPDFFilter;
+    Relatorio: TRLReport;
+    Cabecalho: TRLBand;
+    RLLabel1: TRLLabel;
+    RLDraw1: TRLDraw;
+    Rodape: TRLBand;
+    RLDraw2: TRLDraw;
+    RLSystemInfo1: TRLSystemInfo;
+    RLSystemInfo2: TRLSystemInfo;
+    RLSystemInfo3: TRLSystemInfo;
+    RLLabel2: TRLLabel;
+    RLLabel3: TRLLabel;
+    RLBand1: TRLBand;
+    RLDBText1: TRLDBText;
+    RLDBText2: TRLDBText;
+    RLBand2: TRLBand;
+    RLPanel1: TRLPanel;
+    RLLabel5: TRLLabel;
+    RLLabel4: TRLLabel;
+    RLXLSXFilter1: TRLXLSXFilter;
+    RLXLSFilter1: TRLXLSFilter;
+    RLLabel6: TRLLabel;
+    RLLabel7: TRLLabel;
+    RLDBText4: TRLDBText;
+    RLDBText3: TRLDBText;
+    QryClienteclienteId: TIntegerField;
+    QryClientenome: TWideStringField;
+    QryClienteemail: TWideStringField;
+    QryClientetelefone: TWideStringField;
+    procedure FormCreate(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
+
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  frmrelCadCliente: TfrmrelCadCliente;
+
+implementation
+
+
+
+{$R *.dfm}
+
+
+procedure TfrmrelCadCliente.FormCreate(Sender: TObject);
+begin
+   QryCliente.Open;
+end;
+
+procedure TfrmrelCadCliente.FormDestroy(Sender: TObject);
+begin
+    QryCliente.Close;
+end;
+
+end.

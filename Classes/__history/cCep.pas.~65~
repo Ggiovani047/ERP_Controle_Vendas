@@ -1,0 +1,126 @@
+unit cCep;
+
+interface
+
+uses System.Classes, Vcl.Controls, Vcl.ExtCtrls, Vcl.Dialogs,
+      ZAbstractConnection, ZConnection,ZAbstractRODataset,
+      ZAbstractDataset, ZDataset,System.SysUtils,
+      System.Net.HttpClient, System.Net.URLClient, System.JSON;
+
+type
+  TCep = class
+  private
+    ConexaoDB: TZConnection;
+    F_Logradouro: String;
+    F_Bairro: String;
+    F_Localidade: String;
+    F_UF: String;
+    function AchaElementoQry: string;
+    class var F_cep: String;
+
+
+  public
+    constructor Create(aConexao: TZConnection);
+    destructor Destroy; override;
+    function ObterDados(aCep: string): Boolean;
+    class property cep: string     read F_CEP              write F_CEP;
+
+  published
+    property endereco:String read F_Logradouro       write F_Logradouro;
+    property bairro: String  read F_Bairro           write F_Bairro;
+    property cidade: String  read F_Localidade       write F_Localidade;
+    property estado: String  read AchaElementoQry    write F_UF;
+  end;
+
+
+implementation
+
+{ TCep }
+{$region 'Constructor and destructor'}
+constructor TCep.Create(aConexao: TZConnection);
+begin
+  ConexaoDB:=aConexao;
+end;
+
+destructor TCep.Destroy;
+begin
+
+  inherited;
+end;
+{$endregion}
+
+function TCep.ObterDados(aCep: string): Boolean;
+var
+  oHTTP: THttpClient;
+  oResultado: IHTTPResponse;
+  strJson: TJSONValue;
+begin
+  F_cep := aCep;
+  result:= False;
+  Try
+    oHTTP := THttpClient.Create;
+    oHTTP.ConnectionTimeout := 4000;
+    oHTTP.ResponseTimeout := 4000;
+    try
+      oResultado := oHTTP.Get('https://viacep.com.br/ws/'+F_cep+'/json');
+
+        if oResultado.StatusCode = 200 then begin
+          try
+            strJson := TJsonObject.ParseJSONValue(oResultado.ContentAsString);
+            Self.F_Logradouro := strJson.GetValue<string>('logradouro');
+            Self.F_Bairro     := strJson.GetValue<string>('bairro');
+            Self.F_Localidade := strJson.GetValue<string>('localidade');
+            Self.F_UF         := strJson.GetValue<string>('uf');
+            result := True;
+          except
+            MessageDlg('Este CEP é Inválido',mtInformation,[mbOK],0);
+            result := False;
+          end;
+        end
+        else if oResultado.StatusCode = 492 then
+          MessageDlg('Muitas requisições no servidor no momento,'+
+          'tente novamente ',mtInformation,[mbOK],0)
+        else if oResultado.StatusCode = 400 then
+          MessageDlg('Ocorreu um erro de Bad Request,'+
+          'cheque o CEP tente novamente ',mtInformation,[mbOK],0);
+    except
+     on E: Exception do
+     MessageDlg('Tempo de resposta do servidor expirou, verifique sua conexão '+
+     'com a internet tente novamente',mtInformation,[mbOK],0)
+    end;
+  Finally
+   if assigned(strJson) then
+      FreeAndNil(strJson);
+
+    if assigned(oHTTP) then
+      FreeAndNil(oHTTP);
+  End;
+End;
+
+
+function TCep.AchaElementoQry: string;
+var Qry: TZQuery;
+begin
+  try
+    Qry:= TZQuery.Create(nil);
+    Qry.Connection := ConexaoDB;
+    Qry.SQL.Clear;
+    Qry.SQL.Add('SELECT id, estado FROM estados WHERE estado = :uf');
+    Qry.ParamByName('uf').AsString := Self.F_UF;
+    try
+      Qry.Open;
+      Result := Qry.FieldByName('id').AsString;
+    except
+    on E: Exception do begin
+      Result := '';
+      MessageDlg('Deu Erro: '+ E.Message,mtError,[mbOK],0);
+    end;
+    end;
+  finally
+    if Assigned(Qry) then
+      FreeAndNil(Qry);
+  end;
+
+end;
+
+end.

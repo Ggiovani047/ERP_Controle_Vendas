@@ -1,0 +1,109 @@
+unit uRelProVenda;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, uDTMVenda, uDTMConexao, ZConnection, ZAbstractRODataset,
+  ZAbstractDataset, ZDataset, Data.DB, RLFilters, RLPDFFilter, RLReport, RLXLSFilter, RLXLSXFilter;
+
+type
+  TfrmrelProVenda = class(TForm)
+    QryVenda: TZQuery;
+    dtsVenda: TDataSource;
+    RLPDFFilter1: TRLPDFFilter;
+    Relatorio: TRLReport;
+    Cabecalho: TRLBand;
+    RLLabel1: TRLLabel;
+    RLDraw1: TRLDraw;
+    Rodape: TRLBand;
+    RLDraw2: TRLDraw;
+    RLSystemInfo1: TRLSystemInfo;
+    RLSystemInfo2: TRLSystemInfo;
+    RLSystemInfo3: TRLSystemInfo;
+    RLLabel2: TRLLabel;
+    RLLabel3: TRLLabel;
+    RLXLSXFilter1: TRLXLSXFilter;
+    RLXLSFilter1: TRLXLSFilter;
+    bandaDoGrupo: TRLGroup;
+    RLBand3: TRLBand;
+    RLBand2: TRLBand;
+    RLPanel1: TRLPanel;
+    RLLabel7: TRLLabel;
+    RLLabel8: TRLLabel;
+    RLDBText5: TRLDBText;
+    QryVendasItens: TZQuery;
+    dtsVendasItens: TDataSource;
+    RLDBText3: TRLDBText;
+    RLLabel10: TRLLabel;
+    RLDBText4: TRLDBText;
+    RLLabel13: TRLLabel;
+    RLDBText6: TRLDBText;
+    RLSubDetail1: TRLSubDetail;
+    RLBand1: TRLBand;
+    RLBand6: TRLBand;
+    RLDBText1: TRLDBText;
+    RLDBText2: TRLDBText;
+    RLLabel4: TRLLabel;
+    RLDraw3: TRLDraw;
+    RLPanel2: TRLPanel;
+    RLLabel9: TRLLabel;
+    RLBand4: TRLBand;
+    RLDBResult1: TRLDBResult;
+    RLLabel5: TRLLabel;
+    RLDBText7: TRLDBText;
+    RLDBText8: TRLDBText;
+    RLDBText9: TRLDBText;
+    RLDraw4: TRLDraw;
+    RLLabel6: TRLLabel;
+    RLLabel11: TRLLabel;
+    RLLabel12: TRLLabel;
+    QryVendavendaId: TIntegerField;
+    QryVendaclienteId: TIntegerField;
+    QryVendanome: TWideStringField;
+    QryVendadataVenda: TDateTimeField;
+    QryVendatotalVenda: TFloatField;
+    QryVendasItensvendaId: TIntegerField;
+    QryVendasItensprodutoId: TIntegerField;
+    QryVendasItensnome: TWideStringField;
+    QryVendasItensquantidade: TFloatField;
+    QryVendasItensvalorUnitario: TFloatField;
+    QryVendasItenstotalProduto: TFloatField;
+    procedure FormCreate(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
+
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  frmrelProVenda: TfrmrelProVenda;
+
+implementation
+
+
+
+{$R *.dfm}
+
+
+procedure TfrmrelProVenda.FormCreate(Sender: TObject);
+begin
+   QryVenda.Open;
+   QryVendasItens.Open;
+end;
+
+procedure TfrmrelProVenda.FormDestroy(Sender: TObject);
+begin
+  try
+   QryVenda.Close;
+   QryVendasItens.Close;
+  except
+  on E:Exception do
+     MessageDlg('De erro: '+E.Message,mtError,[mbOK], 0)
+
+  end;
+end;
+
+end.

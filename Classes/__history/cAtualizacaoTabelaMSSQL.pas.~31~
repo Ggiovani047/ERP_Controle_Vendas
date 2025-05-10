@@ -1,0 +1,286 @@
+unit cAtualizacaoTabelaMSSQL;
+
+interface
+
+uses System.Classes,
+     Vcl.Controls,
+     Vcl.ExtCtrls,
+     Vcl.Dialogs,
+     ZAbstractConnection,
+     ZConnection,
+     ZAbstractRODataset,
+     ZAbstractDataset,
+     ZDataset,
+     System.SysUtils,
+     cAtualizacaoBancoDeDados,
+     cCadUsuario,
+     uFrmAtualizaDB;
+
+
+type
+  TAtualizacaoTabelaMSSQL = class(TAtualizaBancoDados)
+
+  private
+    function TabelaExiste(aNomeTabela:String):boolean;
+    procedure Categoria;
+    procedure Estado;
+    procedure Clientes;
+    procedure Produto;
+    procedure Vendas;
+    procedure VendasItens;
+    procedure Usuarios;
+    procedure AcaoAcesso;
+    procedure UsuariosAcaoAcesso;
+    procedure ComponentsForm;
+
+
+
+  protected
+
+  public
+    TabelaUsuariosVazia: Boolean;
+    Constructor Create(aConexao:TZConnection);
+    destructor Destroy; override;
+
+  end;
+
+
+implementation
+
+uses uPrincipal;
+
+{ TAtualizacaoTabelaMSSQL }
+
+constructor TAtualizacaoTabelaMSSQL.Create(aConexao: TZConnection);
+begin
+   ConexaoDB:=aConexao;
+   Categoria;
+   Estado;
+   Clientes;
+   Produto;
+   Vendas;
+   VendasItens;
+   Usuarios;
+   AcaoAcesso;
+   UsuariosAcaoAcesso;
+   ComponentsForm;
+end;
+
+destructor TAtualizacaoTabelaMSSQL.Destroy;
+begin
+
+  inherited;
+end;
+
+function TAtualizacaoTabelaMSSQL.TabelaExiste(aNomeTabela: String): boolean;
+var Qry: TZQuery;
+begin
+  try
+    Result:=False;
+    Qry:=TZQuery.Create(nil);
+    Qry.Connection:=ConexaoDB;
+    Qry.SQL.Clear;
+    Qry.SQL.Add('SELECT OBJECT_ID ('''+aNomeTabela+''') AS ID');
+    //Qry.ParamByName('NomeTabela').AsString:=aNomeTabela;
+    Qry.Open;
+
+    if Qry.FieldByName('ID').AsInteger>0 then
+        Result:=True;
+
+    finally
+    Qry.Close;
+    if Assigned(Qry) then
+      FreeAndNil(Qry);
+  end;
+end;
+
+
+
+procedure TAtualizacaoTabelaMSSQL.AcaoAcesso;
+begin
+  if not TabelaExiste('acaoAcesso') then
+    begin
+      ExecutaDiretoBancoDeDados(
+       'CREATE TABLE acaoAcesso ( '+
+       ' acaoAcessoId int identity(1,1) not null,' +
+       ' descricao varchar(100) not null,' +
+       ' chave varchar (60) not null,' +
+       ' PRIMARY KEY (acaoAcessoId)' +
+       ' ) ' );
+    end;
+
+end;
+
+
+
+procedure TAtualizacaoTabelaMSSQL.Categoria;
+begin
+  if not TabelaExiste('categorias') then
+  begin
+     ExecutaDiretoBancoDeDados(
+    ' CREATE TABLE categorias(  '+
+    '   categoriaId int IDENTITY(1,1) NOT NULL,  '+
+    '  descricao varchar (30) NULL,  '+
+    '   primary KEY (categoriaId))'  );
+  end;
+end;
+
+procedure TAtualizacaoTabelaMSSQL.Estado;
+begin
+  if not TabelaExiste('estados') then
+  begin
+     ExecutaDiretoBancoDeDados(
+    ' CREATE TABLE estados ( '+
+    '  id INT IDENTITY(1,1) PRIMARY KEY,'+
+    ' estado CHAR(2) NOT NULL); '+
+ 'INSERT INTO estados (estado) VALUES '+
+  '(''AC''),(''AL''),(''AP''),(''AM''),(''BA''),(''CE''),(''DF''),(''ES''),(''GO''),(''MA''),(''MT''),'+
+  '(''MS''),(''MG''),(''PA''),(''PB''),(''PR''),(''PE''),(''PI''),(''RJ''),(''RN''),(''RS''),(''RO''), '+
+  '(''RR''),(''SC''),(''SP''),(''SE''),(''TO'');');
+  end;
+end;
+
+procedure TAtualizacaoTabelaMSSQL.Clientes;
+begin
+  if not TabelaExiste('clientes') then
+  begin
+     ExecutaDiretoBancoDeDados(
+  'CREATE TABLE clientes(' +
+  ' clienteId int IDENTITY (1,1) NOT NULL,' +
+  ' nome VARCHAR (60) NULL,' +
+  ' endereco varchar(60) NULL,' +
+  '  cidade varchar (50) null,' +
+  '  bairro varchar(40) null,' +
+  '  cep varchar(10) null,' +
+  '  telefone varchar(14) null,' +
+  '  email varchar(100) null,' +
+  '  dataNascimento datetime null,' +
+  '  estadoId INT NULL,' +
+  '  PRIMARY KEY (clienteId),' +
+  'CONSTRAINT FK_clientes_estados FOREIGN KEY (estadoId) REFERENCES estados(id))'
+  );
+  end;
+end;
+
+
+procedure TAtualizacaoTabelaMSSQL.Produto;
+begin
+  if not TabelaExiste('produtos') then
+  begin
+     ExecutaDiretoBancoDeDados(
+    ' create table produtos( '+
+    ' produtoid int identity(1,1) not null, '+
+    ' nome varchar (60) null,'+
+    ' descricao varchar (255) null,'+
+    ' valor decimal (18,5) default 0.00000 null,'+
+    ' quantidade decimal (18,5) default 0.00000 null,'+
+    ' categoriaId int null, '+
+    ' primary key (produtoId),'+
+    ' constraint FK_ProdutosCategorias'+
+    ' foreign key (categoriaId) references categorias(categoriaId))'
+  );
+  end;
+end;
+
+procedure TAtualizacaoTabelaMSSQL.Vendas;
+begin
+  if not TabelaExiste('vendas') then
+  begin
+     ExecutaDiretoBancoDeDados(
+    ' create table vendas ('+
+    '  vendaId int identity (1,1) not null, '+
+    '  clienteId int not null,'+
+    '  datavenda datetime default getdate(), '+
+    '  totalVenda decimal (18,5) default 0.00000,'+
+    '  primary key (vendaId), '+
+    '  constraint FK_VendasClientes foreign key (clienteId) '+
+    '  references clientes(clienteId)) ');
+  end;
+end;
+
+
+procedure TAtualizacaoTabelaMSSQL.VendasItens;
+begin
+  if not TabelaExiste('vendasItens') then
+  begin
+     ExecutaDiretoBancoDeDados(
+  'create table vendasItens ( '+
+  ' vendaId int not null, '+
+  '  produtoId int not null,'+
+  '  ValorUnitario decimal (18,5) default 0.00000,'+
+  '  quantidade decimal (18,5) default 0.00000,'+
+  '  totalProduto decimal (18,5) default 0.00000, '+
+  '  primary key (vendaId, produtoId),'+
+  '  constraint FK_VendasItensProdutos foreign key (produtoId) '+
+  '  references produtos(produtoId))');
+  end;
+end;
+
+
+procedure TAtualizacaoTabelaMSSQL.Usuarios;
+var oUsuario: TUsuario;
+begin
+  if not TabelaExiste('usuarios') then
+  begin
+     ExecutaDiretoBancoDeDados(
+    ' Create table usuarios ('+
+    '  usuarioId int identity (1,1) not null, '+
+		'  nome varchar(50) not null,' +
+		'  senha varchar(40) not null,' +
+		'  primary key (usuarioId))');
+  end;
+  TAtualizaBancosDadosMSSQL.TabelaUsuariosVazia := TAtualizaBancoDados.TabelaVazia('usuarios',ConexaoDB);
+  Try
+    oUsuario:=TUsuario.Create(ConexaoDB);
+    oUsuario.nome:='ADMIN';
+    oUsuario.senha:='mudar@123';
+    if not oUsuario.UsuarioExiste(oUsuario.nome) then
+      oUsuario.Inserir;
+  Finally
+    if assigned(oUsuario) then
+      FreeAndNil(oUsuario);
+  End;
+end;
+
+procedure TAtualizacaoTabelaMSSQL.UsuariosAcaoAcesso;
+begin
+  if not TabelaExiste('usuariosAcaoAcesso') then
+    begin
+      ExecutaDiretoBancoDeDados(
+      'CREATE TABLE usuariosAcaoAcesso( '+
+      ' usuarioId int not null, '+
+      ' acaoAcessoId int not null, ' +
+      ' ativo bit not null default 1, ' +
+      'PRIMARY KEY (usuarioId, acaoAcessoId), ' +
+      'CONSTRAINT FK_UsuarioAcaoAcessoUsuario ' +
+      'FOREIGN KEY (usuarioId) references usuarios(usuarioId), ' +
+      'CONSTRAINT FK_UsuarioAcaoAcessoAcaoAcesso ' +
+      'FOREIGN KEY (acaoAcessoId) references acaoAcesso(acaoAcessoId),' +
+      ' ) ' );
+    end;
+
+end;
+
+
+procedure TAtualizacaoTabelaMSSQL.ComponentsForm;
+begin
+  if not TabelaExiste('ComponentsForm') then
+  begin
+     ExecutaDiretoBancoDeDados(' CREATE TABLE ComponentsForm (' +
+                               '  formId INT NOT NULL IDENTITY(1,1),' +
+                               '  nomeForm VARCHAR(60) NOT NULL,' +
+                               '  quantidadeComponents INT NOT NULL,' +
+                               '  PRIMARY KEY (formId))' );
+  end;
+end;
+
+
+
+
+
+
+
+
+
+
+end.

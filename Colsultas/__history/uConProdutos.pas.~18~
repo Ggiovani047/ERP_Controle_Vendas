@@ -1,0 +1,52 @@
+unit uConProdutos;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, uTelaHeranca, Data.DB, uDTMVenda,
+  ZAbstractRODataset, ZAbstractDataset, ZDataset, Vcl.Buttons, Vcl.DBCtrls,
+  Vcl.Grids, Vcl.DBGrids, Vcl.StdCtrls, Vcl.Mask, Vcl.ExtCtrls, Vcl.ComCtrls;
+
+type
+  TfrmConProdutos = class(TfrmTelaHeranca)
+
+
+    btnSelecionar: TBitBtn;
+    procedure btnSelecionarClick(Sender: TObject);
+    procedure grdListagemDblClick(Sender: TObject);
+  private
+
+    { Private declarations }
+  public
+    { Public declarations }
+    idProdutoSelecionado: Integer;
+    procedure colocarIdLkp(lkp:TDBLookupComboBox);
+
+  end;
+
+var
+  frmConProdutos: TfrmConProdutos;
+
+implementation
+
+{$R *.dfm}
+
+procedure TfrmConProdutos.btnSelecionarClick(Sender: TObject);
+begin
+  inherited;
+  idProdutoSelecionado := QryListagem.FieldByName('produtoId').AsInteger;
+
+  Close;
+end;
+
+procedure TfrmConProdutos.grdListagemDblClick(Sender: TObject);
+begin
+  btnSelecionar.Click;
+end;
+
+procedure TfrmConProdutos.colocarIdLkp(lkp:TDBLookupComboBox);
+begin
+  lkp.KeyValue := idProdutoSelecionado;
+end;
+end.

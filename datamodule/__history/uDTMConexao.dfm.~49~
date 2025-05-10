@@ -1,0 +1,23 @@
+object dtmPrincipal: TdtmPrincipal
+  OldCreateOrder = True
+  Height = 173
+  Width = 242
+  object ConexaoDB: TZConnection
+    ControlsCodePage = cCP_UTF16
+    Catalog = ''
+    Properties.Strings = (
+      'RawStringEncoding=DB_CP')
+    TransactIsolationLevel = tiReadCommitted
+    Connected = True
+    HostName = ''
+    Port = 1433
+    Database = 
+      'Provider=SQLOLEDB.1;Integrated Security=SSPI;Persist Security In' +
+      'fo=False;Initial Catalog=loja;Data Source=DC-TR-3-VM\SQLEXPRESS'
+    User = ''
+    Password = ''
+    Protocol = 'ado'
+    Left = 109
+    Top = 72
+  end
+end

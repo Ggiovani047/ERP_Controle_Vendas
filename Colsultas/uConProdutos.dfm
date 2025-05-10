@@ -1,0 +1,223 @@
+inherited frmConProdutos: TfrmConProdutos
+  Caption = 'Consulta de Produtos'
+  ClientHeight = 434
+  ClientWidth = 1031
+  ExplicitWidth = 1037
+  ExplicitHeight = 463
+  PixelsPerInch = 96
+  TextHeight = 13
+  inherited pgcPrincipal: TPageControl
+    Width = 1031
+    Height = 387
+    ExplicitWidth = 1031
+    ExplicitHeight = 387
+    inherited tabListagem: TTabSheet
+      ExplicitWidth = 1023
+      ExplicitHeight = 359
+      inherited pnlListagemTopo: TPanel
+        Width = 1023
+        Height = 36
+        Color = clMenu
+        ParentBackground = False
+        ExplicitWidth = 1023
+        ExplicitHeight = 36
+        inherited lblIndice: TLabel
+          Left = 0
+          Top = 1
+          Width = 78
+          Caption = 'Campo Pesquisa'
+          ExplicitLeft = 0
+          ExplicitTop = 1
+          ExplicitWidth = 78
+        end
+        inherited mskPesquisar: TMaskEdit
+          Left = 0
+          Top = 14
+          Width = 926
+          Color = 13882323
+          ExplicitLeft = 0
+          ExplicitTop = 14
+          ExplicitWidth = 926
+        end
+        inherited btnPesquisar: TBitBtn
+          Left = 928
+          Top = 14
+          Width = 90
+          ExplicitLeft = 928
+          ExplicitTop = 14
+          ExplicitWidth = 90
+        end
+      end
+      inherited grdListagem: TDBGrid
+        Top = 36
+        Width = 1023
+        Height = 323
+        Columns = <
+          item
+            Expanded = False
+            FieldName = 'produtoid'
+            Width = 91
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'nome'
+            Width = 257
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'descricao'
+            Width = 325
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'valor'
+            Width = 45
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'quantidade'
+            Width = 63
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'Categoria'
+            Visible = True
+          end>
+      end
+    end
+    inherited tabManutencao: TTabSheet
+      ExplicitWidth = 1023
+      ExplicitHeight = 359
+    end
+  end
+  inherited pnlRodape: TPanel
+    Top = 387
+    Width = 1031
+    ExplicitLeft = 0
+    ExplicitTop = 387
+    ExplicitWidth = 1031
+    DesignSize = (
+      1031
+      47)
+    inherited btnApagar: TBitBtn [0]
+      Left = 932
+      Top = 14
+      Visible = False
+      ExplicitLeft = 932
+      ExplicitTop = 14
+    end
+    inherited btnNovo: TBitBtn [1]
+      Left = 932
+      Top = 14
+      TabOrder = 3
+      Visible = False
+      ExplicitLeft = 932
+      ExplicitTop = 14
+    end
+    inherited btnAlterar: TBitBtn [2]
+      Left = 932
+      Top = 14
+      TabOrder = 2
+      Visible = False
+      ExplicitLeft = 932
+      ExplicitTop = 14
+    end
+    inherited btnCancelar: TBitBtn [3]
+      Left = 932
+      Top = 14
+      TabOrder = 1
+      Visible = False
+      ExplicitLeft = 932
+      ExplicitTop = 14
+    end
+    inherited btnGravar: TBitBtn [4]
+      Left = 932
+      Top = 14
+      TabOrder = 0
+      Visible = False
+      ExplicitLeft = 932
+      ExplicitTop = 14
+    end
+    inherited btnFechar: TBitBtn
+      Left = 932
+      Top = 14
+      Width = 81
+      ExplicitLeft = 932
+      ExplicitTop = 14
+      ExplicitWidth = 81
+    end
+    inherited btnNavigator: TDBNavigator
+      Left = 304
+      Top = 14
+      Width = 368
+      Hints.Strings = ()
+      TabOrder = 7
+      ExplicitLeft = 304
+      ExplicitTop = 14
+      ExplicitWidth = 368
+    end
+    object btnSelecionar: TBitBtn
+      Left = 32
+      Top = 14
+      Width = 75
+      Height = 25
+      Caption = 'SELECIONAR'
+      TabOrder = 6
+      OnClick = btnSelecionarClick
+    end
+  end
+  inherited QryListagem: TZQuery
+    SQL.Strings = (
+      
+        'Select produtos.produtoid, produtos.nome, produtos.descricao, pr' +
+        'odutos.valor,'
+      
+        'produtos.quantidade, produtos.categoriaId, categorias.descricao ' +
+        'as Categoria'
+      'from produtos'
+      
+        'inner join categorias on categorias.categoriaId= produtos.catego' +
+        'riaId;')
+    Top = 65528
+    object QryListagemprodutoid: TIntegerField
+      DisplayLabel = 'C'#243'd. Produto'
+      FieldName = 'produtoid'
+      ReadOnly = True
+      DisplayFormat = '#0'
+    end
+    object QryListagemnome: TWideStringField
+      DisplayLabel = 'Nome'
+      FieldName = 'nome'
+      Size = 60
+    end
+    object QryListagemdescricao: TWideStringField
+      DisplayLabel = 'Descri'#231#227'o'
+      FieldName = 'descricao'
+      Size = 255
+    end
+    object QryListagemvalor: TFloatField
+      DisplayLabel = 'Valor'
+      FieldName = 'valor'
+      currency = True
+    end
+    object QryListagemquantidade: TFloatField
+      DisplayLabel = 'Quantidade'
+      FieldName = 'quantidade'
+    end
+    object QryListagemcategoriaId: TIntegerField
+      FieldName = 'categoriaId'
+    end
+    object QryListagemCategoria: TWideStringField
+      FieldName = 'Categoria'
+      Size = 30
+    end
+  end
+  inherited dtsListagem: TDataSource
+    Top = 65528
+  end
+end

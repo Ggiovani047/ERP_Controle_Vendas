@@ -1,0 +1,92 @@
+unit uRelCadProdutoComGrupoCategoria;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, uDTMVenda, uDTMConexao, ZConnection, ZAbstractRODataset,
+  ZAbstractDataset, ZDataset, Data.DB, RLFilters, RLPDFFilter, RLReport, RLXLSFilter, RLXLSXFilter;
+
+type
+  TfrmrelCadProdutoComGrupoCategoria = class(TForm)
+    QryProdutos: TZQuery;
+    dtsProdutos: TDataSource;
+    RLPDFFilter1: TRLPDFFilter;
+    Relatorio: TRLReport;
+    Cabecalho: TRLBand;
+    RLLabel1: TRLLabel;
+    RLDraw1: TRLDraw;
+    Rodape: TRLBand;
+    RLDraw2: TRLDraw;
+    RLSystemInfo1: TRLSystemInfo;
+    RLSystemInfo2: TRLSystemInfo;
+    RLSystemInfo3: TRLSystemInfo;
+    RLLabel2: TRLLabel;
+    RLLabel3: TRLLabel;
+    RLXLSXFilter1: TRLXLSXFilter;
+    RLXLSFilter1: TRLXLSFilter;
+    bandaDoGrupo: TRLGroup;
+    RLBand3: TRLBand;
+    RLBand2: TRLBand;
+    RLPanel1: TRLPanel;
+    RLLabel5: TRLLabel;
+    RLLabel4: TRLLabel;
+    RLLabel7: TRLLabel;
+    RLBand1: TRLBand;
+    RLDBText1: TRLDBText;
+    RLDBText2: TRLDBText;
+    RLDBText3: TRLDBText;
+    RLDBText4: TRLDBText;
+    RLLabel8: TRLLabel;
+    RLDBText5: TRLDBText;
+    RLDBText6: TRLDBText;
+    RLLabel9: TRLLabel;
+    RLBand4: TRLBand;
+    RLDraw3: TRLDraw;
+    RLDBResult1: TRLDBResult;
+    RLDBResult2: TRLDBResult;
+    RLLabel6: TRLLabel;
+    RLLabel11: TRLLabel;
+    RLLabel10: TRLLabel;
+    QryProdutosprodutoId: TIntegerField;
+    QryProdutosnome: TWideStringField;
+    QryProdutosvalor: TFloatField;
+    QryProdutosquantidade: TFloatField;
+    QryProdutoscategoriaId: TIntegerField;
+    QryProdutosDescricaoCategoria: TWideStringField;
+    procedure FormCreate(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
+
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  frmrelCadProdutoComGrupoCategoria: TfrmrelCadProdutoComGrupoCategoria;
+
+implementation
+
+
+
+{$R *.dfm}
+
+
+procedure TfrmrelCadProdutoComGrupoCategoria.FormCreate(Sender: TObject);
+begin
+   QryProdutos.Open;
+end;
+
+procedure TfrmrelCadProdutoComGrupoCategoria.FormDestroy(Sender: TObject);
+begin
+  try
+   QryProdutos.Close;
+  except
+  on E:Exception do
+     MessageDlg('De erro: '+E.Message,mtError,[mbOK], 0)
+
+  end;
+end;
+
+end.
