@@ -2,6 +2,8 @@
 
 Sistema ERP completo para controle de vendas, estoque, cadastros e geração de relatórios, desenvolvido em Delphi.
 
+---
+
 ## 📌 Funcionalidades
 
 - 📦 Cadastro de Produtos e Categorias
@@ -13,6 +15,9 @@ Sistema ERP completo para controle de vendas, estoque, cadastros e geração de 
 - 📈 Gráficos de desempenho e relatórios impressos
 - 🔄 Atualização de estrutura de banco via interface
 
+
+---
+
 ## 🛠️ Tecnologias
 
 - **Delphi (VCL)**
@@ -20,10 +25,7 @@ Sistema ERP completo para controle de vendas, estoque, cadastros e geração de 
 - **Banco de dados relacional** (utiliza `.dll` de driver DBLib)
 - **RLReport** para geração de relatórios e gráficos
 
-
-
-
-
+---
 
 ## 🚀 Como Executar
 
@@ -32,6 +34,8 @@ Sistema ERP completo para controle de vendas, estoque, cadastros e geração de 
 3. Execute novamente o .EXE `Vendas.exe`.
 4. Caso a configuração do banco esteja correta acesse o usuario 'ADMIN', senha: 'mudar@123'.
 5. O sistema está pronto para usar.
+
+---
 
 ## 📚 Requisitos
 
