@@ -20,8 +20,27 @@ Sistema ERP completo para controle de vendas, estoque, cadastros e geração de 
 - **Banco de dados relacional** (utiliza `.dll` de driver DBLib)
 - **RLReport** para geração de relatórios e gráficos
 
+
+
+
+
+
+## 🚀 Como Executar
+
+1. Execute o .EXE `Vendas.exe`.
+2. Configure a conexão com o banco de dados no Ini que irá ser gerado no mesmo diretório do .exe.
+3. Execute novamente o .EXE `Vendas.exe`.
+4. Caso a configuração do banco esteja correta acesse o usuario 'ADMIN', senha: 'mudar@123'.
+5. O sistema está pronto para usar.
+
+## 📚 Requisitos
+
+- Banco de dados SQL Server Instalado.
+
+---
 ## 📁 Estrutura do Projeto
 
+```text
 📂 ERP_Venda_e_Controle
 ├── Vendas.dpr                 # Arquivo principal do projeto Delphi
 ├── uPrincipal.pas             # Interface principal do sistema
@@ -73,23 +92,8 @@ Sistema ERP completo para controle de vendas, estoque, cadastros e geração de 
     ├── cAtualizacaoTabelaMSSQL.pas # Classe de criação das tabelas no banco de dados
     ├── cCep.pas                    # Classe de integração com API VIACEP para cadastro de clientes
     └── cControleEstoque.pas        # Classe de controle de estoque
+```
 
-
-
-## 🚀 Como Executar
-
-1. Abra o projeto `Vendas.dpr` no Delphi (versão compatível: Delphi 10+).
-2. Certifique-se de ter os componentes **ZeosLib** instalados.
-3. Configure a conexão com o banco de dados no `uDTMConexao.pas`.
-4. Compile e execute a aplicação.
-
-## 📚 Requisitos
-
-- Delphi com suporte a VCL
-- ZeosLib instalado
-- Driver do banco de dados configurado (`ntwdblib.dll` incluso)
-
----
 
 Desenvolvido para fins de estudo, testes e demonstração de um ERP funcional em Delphi.
 
