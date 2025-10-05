@@ -1,4 +1,4 @@
-## <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/delphi/delphi-original.svg" width="50" style="vertical-align:middle;"/> ERP Vendas
+## <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/delphi/delphi-original.svg" width="30" style="vertical-align:middle;"/> ERP Vendas
 
 Sistema ERP completo para controle de vendas, estoque, cadastros e geração de relatórios, desenvolvido em Delphi.
 
